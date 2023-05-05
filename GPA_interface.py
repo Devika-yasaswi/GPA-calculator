@@ -253,41 +253,40 @@ def new():
         if C.get()==1 or C.get()==2:
             #checks semester type selection
             if S.get()==1 or S.get()==2:  
-                #checks weather previous gpa file is uploaded or not
-                if S.get()==2 and supple_file=='':
-                    Label(root,text='Please upload the previous GPA file',font=Entry_font,fg='red',bg="#ADD8E6").grid(row=20,column=0,sticky='w')
-                else:
-                    print("Hello")
-                    try:
-                        print("try")
-                        print(civil.get(),":",mech.get(),":",eee.get(),":",ece.get(),":",cse.get())
-                        civil_credits=float(civil.get())
-                        mech_credits=float(mech.get())
-                        eee_credits=float(eee.get())
-                        ece_credits=float(ece.get())
-                        cse_credits=float(cse.get())
-                        if C.get()==1:
-                            try:
-                                Sgpa(civil_credits,mech_credits,eee_credits,ece_credits,cse_credits,input_file)
-                            except ValueError:
-                                pass
+                if C.get()==1:
+                    #checks input GPA file
+                    if input_file!='': 
+                        if S.get()==2 and supple_file=='':
+                            Label(root,text='Please upload the previous GPA file',font=Entry_font,fg='red',bg="#ADD8E6").grid(row=20,column=0,sticky='w')
                         else:
-                            if S.get()==1:
-                                pass
-                            else:
-                                pass
-                        master.destroy()
-                    except:
-                        Label(root,text='Please enter total credits of all branches correctly',font=Entry_font,fg='red',bg="#ADD8E6").grid(row=20,column=0,sticky='w')
+                            try:
+                                civil_credits=float(civil.get())
+                                mech_credits=float(mech.get())
+                                eee_credits=float(eee.get())
+                                ece_credits=float(ece.get())
+                                cse_credits=float(cse.get())
+                                if S.get()==1:
+                                    try:
+                                        Sgpa(civil_credits,mech_credits,eee_credits,ece_credits,cse_credits,input_file)
+                                    except ValueError:
+                                        pass
+                                else:
+                                    if S.get()==1:
+                                        pass
+                                    else:
+                                        pass
+                                master.destroy()
+                            except:
+                                Label(root,text='Please enter total credits of all branches correctly',font=Entry_font,fg='red',bg="#ADD8E6").grid(row=20,column=0,sticky='w')
+                    else:
+                        Label(root,text='Please upload the grades excel',font=Entry_font,fg='red',bg="#ADD8E6").grid(row=20,column=0,sticky='w')
+                    #checks weather previous gpa file is uploaded or not
+                    
             else:
                 Label(root,text='Please select Semester type    ',font=Entry_font,fg='red',bg="#ADD8E6").grid(row=20,column=0,sticky='w')
         else:
             Label(root,text='Please select Calculation type  ',font=Entry_font,fg='red',bg="#ADD8E6").grid(row=20,column=0,sticky='w')
-        #checks input GPA file
-        '''if input_file!='': 
-            pass
-        else:
-            Label(root,text='Please upload the grades excel',font=Entry_font,fg='red',bg="#ADD8E6").grid(row=20,column=0,sticky='w')'''
+        
     #Reset functionality
     def reset():
         master.destroy()
