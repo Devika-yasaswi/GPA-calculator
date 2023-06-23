@@ -117,7 +117,7 @@ def Sgpa(data):
                 if int(d[0:4])>start:
                     start=int(d[0:4])
                     cse=len(df.index)+1
-                    data1=df.to_excel(output,sheet_name="CSE",index=False)
+                    df.to_excel(output,sheet_name="CSE",index=False)
                     start_x=2
                     delete()
                 a=int(d[7])*100+1
@@ -127,37 +127,37 @@ def Sgpa(data):
                 if int(d[7])==2:
                     
                     if start_x==2:
-                        data1=df.to_excel(output,sheet_name="Civil",index=False,startrow=civil,header=None)
+                        df.to_excel(output,sheet_name="Civil",index=False,startrow=civil,header=None)
                     else:
                         civil=len(df.index)+1
-                        data1=df.to_excel(output,sheet_name="Civil",index=False)
+                        df.to_excel(output,sheet_name="Civil",index=False)
                     total_credits=eee_credits
                     delete()
                     df["Roll_No"]=[]
                 if int(d[7])==3:
                     if start_x==2:
-                        data1=df.to_excel(output,sheet_name="EEE",index=False,startrow=eee,header=None)
+                        df.to_excel(output,sheet_name="EEE",index=False,startrow=eee,header=None)
                     else:
                         eee=len(df.index)+1
-                        data1=df.to_excel(output,sheet_name="EEE",index=False)
+                        df.to_excel(output,sheet_name="EEE",index=False)
                     total_credits=mech_credits
                     delete()
                     df["Roll_No"]=[]
                 if int(d[7])==4:
                     if start_x==2:
-                        data1=df.to_excel(output,sheet_name="Mechanical",index=False,startrow=mech,header=None)
+                        df.to_excel(output,sheet_name="Mechanical",index=False,startrow=mech,header=None)
                     else:
                         mech=len(df.index)+1
-                        data1=df.to_excel(output,sheet_name='Mechanical',index=False)
+                        df.to_excel(output,sheet_name='Mechanical',index=False)
                     total_credits=ece_credits
                     delete()
                     df["Roll_No"]=[]
                 if int(d[7])==5:
                     if start_x==2:
-                        data1=df.to_excel(output,sheet_name="ECE",index=False,startrow=ece,header=None)
+                        df.to_excel(output,sheet_name="ECE",index=False,startrow=ece,header=None)
                     else:
                         ece=len(df.index)+1
-                        data1=df.to_excel(output,sheet_name="ECE",index=False)
+                        df.to_excel(output,sheet_name="ECE",index=False)
                     total_credits=cse_credits
                     delete()
                     df["Roll_No"]=[]
@@ -219,6 +219,6 @@ def Sgpa(data):
         #Adding final sheet CSE to the Excel
         enter()
         if start_x==2:
-            data1=df.to_excel(output,sheet_name="CSE",index=False,startrow=cse,header=None)
+            df.to_excel(output,sheet_name="CSE",index=False,startrow=cse,header=None)
         else:
-                data1=df.to_excel(output,sheet_name="CSE",index=False,startrow=cse)
+            df.to_excel(output,sheet_name="CSE",index=False,startrow=cse)

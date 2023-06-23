@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter.filedialog import *
 from regular_SGPA import *
 from Revaluation import *
+from CGPA import *
 from PIL import Image, ImageTk
 import tabula
 input_file=''
@@ -31,6 +32,26 @@ pdf_type = [("pdf Files",'.*pdf')]
 excel_type=[("xlsx Files",".*xlsx")]
 s_temp=0
 
+#Sem selection variables
+sem1=IntVar()
+sem2=IntVar()
+sem3=IntVar()
+sem4=IntVar()
+sem5=IntVar()
+sem6=IntVar()
+sem7=IntVar()
+sem8=IntVar()
+
+#File Paths
+sem1_file=""
+sem2_file=""
+sem3_file=""
+sem4_file=""
+sem5_file=""
+sem6_file=""
+sem7_file=""
+sem8_file=""
+
 #File reading function for SGPA-Regular
 def input_marks_file():
     global input_file
@@ -40,98 +61,100 @@ def input_marks_file():
 def GPA_file_func():
     global GPA_file
     GPA_file=askopenfilename(filetypes=excel_type)
-sem=IntVar()
 def variable_sem_files():
     global sem_label_list,sem_button_list,s_temp
-    try:
-        if s_temp>sem.get():
-            for i in range(sem.get(),s_temp):
-                sem_label_list[i].grid_forget()
-                sem_button_list[i].grid_forget()
-    except FileNotFoundError:
-        pass
-    if sem.get()>=1 and sem.get()<=8:
+    sem_selection=[sem1.get(),sem2.get(),sem3.get(),sem4.get(),sem5.get(),sem6.get(),sem7.get(),sem8.get()]
+    if 1 in sem_selection:        
+        try:
+            for i in range(len(sem_selection)):
+                if sem_selection[i]==0:                    
+                    sem_label_list[i].grid_forget()
+                    sem_button_list[i].grid_forget()
+        except:
+            pass
         upload_sem_files()
-        s_temp=sem.get()
+    
 
 def semester():
     global sem_select_label,sem1_cbutton,sem2_cbutton,sem3_cbutton,sem4_cbutton,sem5_cbutton,sem6_cbutton,sem7_cbutton,sem8_cbutton,sem
     sem_select_label=Label(root,text="Choose Semesters for CGPA",font=Label_font,bg="#FFE9E3")
     sem_select_label.grid(row=4,column=0,sticky='w')
-    sem1_cbutton=Checkbutton(root,text="Sem 1",font=Entry_font,bg="#FFE9E3",command=variable_sem_files)
+    sem1_cbutton=Checkbutton(root,text="Sem 1",font=Entry_font,variable=sem1,bg="#FFE9E3",command=variable_sem_files)
     sem1_cbutton.grid(row=4,column=2,sticky='w')
-    sem2_cbutton=Checkbutton(root,text="Sem 2",font=Entry_font,bg="#FFE9E3",command=variable_sem_files)
+    sem2_cbutton=Checkbutton(root,text="Sem 2",font=Entry_font,variable=sem2,bg="#FFE9E3",command=variable_sem_files)
     sem2_cbutton.grid(row=4,column=3,sticky='w')
-    sem3_cbutton=Checkbutton(root,text="Sem 3",font=Entry_font,bg="#FFE9E3",command=variable_sem_files)
+    sem3_cbutton=Checkbutton(root,text="Sem 3",font=Entry_font,variable=sem3,bg="#FFE9E3",command=variable_sem_files)
     sem3_cbutton.grid(row=5,column=2,sticky='w')
-    sem4_cbutton=Checkbutton(root,text="Sem 4",font=Entry_font,bg="#FFE9E3",command=variable_sem_files)
+    sem4_cbutton=Checkbutton(root,text="Sem 4",font=Entry_font,variable=sem4,bg="#FFE9E3",command=variable_sem_files)
     sem4_cbutton.grid(row=5,column=3,sticky='w')
-    sem5_cbutton=Checkbutton(root,text="Sem 5",font=Entry_font,bg="#FFE9E3",command=variable_sem_files)
+    sem5_cbutton=Checkbutton(root,text="Sem 5",font=Entry_font,variable=sem5,bg="#FFE9E3",command=variable_sem_files)
     sem5_cbutton.grid(row=6,column=2,sticky='w')
-    sem6_cbutton=Checkbutton(root,text="Sem 6",font=Entry_font,bg="#FFE9E3",command=variable_sem_files)
+    sem6_cbutton=Checkbutton(root,text="Sem 6",font=Entry_font,variable=sem6,bg="#FFE9E3",command=variable_sem_files)
     sem6_cbutton.grid(row=6,column=3,sticky='w')
-    sem7_cbutton=Checkbutton(root,text="Sem 7",font=Entry_font,bg="#FFE9E3",command=variable_sem_files)
+    sem7_cbutton=Checkbutton(root,text="Sem 7",font=Entry_font,variable=sem7,bg="#FFE9E3",command=variable_sem_files)
     sem7_cbutton.grid(row=7,column=2,sticky='w')
-    sem8_cbutton=Checkbutton(root,text="Sem 8",font=Entry_font,bg="#FFE9E3",command=variable_sem_files)
+    sem8_cbutton=Checkbutton(root,text="Sem 8",font=Entry_font,variable=sem8,bg="#FFE9E3",command=variable_sem_files)
     sem8_cbutton.grid(row=7,column=3,sticky='w')
 #Sem SGPA file upload functions for CGPA calculation
-def sem1_files():
-    global sem1_file
+def sem1_file_function():
+    global sem1_file    
     sem1_file=askopenfilename(filetypes=excel_type)
-def sem2_files():
+def sem2_file_function():
     global sem2_file
     sem2_file=askopenfilename(filetypes=excel_type)
-def sem3_files():
+def sem3_file_function():
     global sem3_file
     sem3_file=askopenfilename(filetypes=excel_type)
-def sem4_files():
+def sem4_file_function():
     global sem4_file
     sem4_file=askopenfilename(filetypes=excel_type)
-def sem5_files():
+def sem5_file_function():
     global sem5_file
     sem5_file=askopenfilename(filetypes=excel_type)
-def sem6_files():
+def sem6_file_function():
     global sem6_file
     sem6_file=askopenfilename(filetypes=excel_type)
-def sem7_files():
+def sem7_file_function():
     global sem7_file
     sem7_file=askopenfilename(filetypes=excel_type)
-def sem8_files():
+def sem8_file_function():
     global sem8_file
     sem8_file=askopenfilename(filetypes=excel_type)
 
-sem1_sgpa=Label(root,text="Sem1 SGPA file",font=Entry_font,bg="#FFE9E3")
-sem1_button=Button(root,text="Upload file",command=sem1_files)
-sem2_sgpa=Label(root,text="Sem2 SGPA file",font=Entry_font,bg="#FFE9E3")
-sem2_button=Button(root,text="Upload file",command=sem2_files)
-sem3_sgpa=Label(root,text="Sem3 SGPA file",font=Entry_font,bg="#FFE9E3")
-sem3_button=Button(root,text="Upload file",command=sem3_files)
-sem4_sgpa=Label(root,text="Sem4 SGPA file",font=Entry_font,bg="#FFE9E3")
-sem4_button=Button(root,text="Upload file",command=sem4_files)
-sem5_sgpa=Label(root,text="Sem5 SGPA file",font=Entry_font,bg="#FFE9E3")
-sem5_button=Button(root,text="Upload file",command=sem5_files)
-sem6_sgpa=Label(root,text="Sem6 SGPA file",font=Entry_font,bg="#FFE9E3")
-sem6_button=Button(root,text="Upload file",command=sem6_files)
-sem7_sgpa=Label(root,text="Sem7 SGPA file",font=Entry_font,bg="#FFE9E3")
-sem7_button=Button(root,text="Upload file",command=sem7_files)
-sem8_sgpa=Label(root,text="Sem8 SGPA file",font=Entry_font,bg="#FFE9E3")
-sem8_button=Button(root,text="Upload file",command=sem8_files)
+sem1_label=Label(root,text="Sem1 SGPA file",font=Entry_font,bg="#FFE9E3")
+sem1_button=Button(root,text="Upload file",command=sem1_file_function)
+sem2_label=Label(root,text="Sem2 SGPA file",font=Entry_font,bg="#FFE9E3")
+sem2_button=Button(root,text="Upload file",command=sem2_file_function)
+sem3_label=Label(root,text="Sem3 SGPA file",font=Entry_font,bg="#FFE9E3")
+sem3_button=Button(root,text="Upload file",command=sem3_file_function)
+sem4_label=Label(root,text="Sem4 SGPA file",font=Entry_font,bg="#FFE9E3")
+sem4_button=Button(root,text="Upload file",command=sem4_file_function)
+sem5_label=Label(root,text="Sem5 SGPA file",font=Entry_font,bg="#FFE9E3")
+sem5_button=Button(root,text="Upload file",command=sem5_file_function)
+sem6_label=Label(root,text="Sem6 SGPA file",font=Entry_font,bg="#FFE9E3")
+sem6_button=Button(root,text="Upload file",command=sem6_file_function)
+sem7_label=Label(root,text="Sem7 SGPA file",font=Entry_font,bg="#FFE9E3")
+sem7_button=Button(root,text="Upload file",command=sem7_file_function)
+sem8_label=Label(root,text="Sem8 SGPA file",font=Entry_font,bg="#FFE9E3")
+sem8_button=Button(root,text="Upload file",command=sem8_file_function)
 #sem files uploading labels and buttons
+sem_label_list=[sem1_label,sem2_label,sem3_label,sem4_label,sem5_label,sem6_label,sem7_label,sem8_label]
+sem_button_list=[sem1_button,sem2_button,sem3_button,sem4_button,sem5_button,sem6_button,sem7_button,sem8_button]
 def upload_sem_files():
-    global sem,sem_label_list,sem_button_list
-    r=8
-    sem_label_list=[sem1_sgpa,sem2_sgpa,sem3_sgpa,sem4_sgpa,sem5_sgpa,sem6_sgpa,sem7_sgpa,sem8_sgpa]
-    sem_button_list=[sem1_button,sem2_button,sem3_button,sem4_button,sem5_button,sem6_button,sem7_button,sem8_button]
-    for i in range(sem.get()):
-        sem_label_list[i].grid(row=r,column=0,sticky='w',pady=6)
-        sem_button_list[i].grid(row=r,column=2,sticky='w')
-        r+=1
+    global sem,sem_label_list,sem_button_list,sem_selection
+    r=8    
+    sem_selection=[sem1.get(),sem2.get(),sem3.get(),sem4.get(),sem5.get(),sem6.get(),sem7.get(),sem8.get()]
+    for i in range(len(sem_selection)):
+        if sem_selection[i]==1:
+            sem_label_list[i].grid(row=r,column=0,sticky='w')
+            sem_button_list[i].grid(row=r,column=2,sticky='w')
+            r+=1
 C=IntVar()
 S=IntVar()
 def sem_type():
     global reval,reval_button,upload,upload_button
     if S.get()==2:
-        reval=Label(root,text="Upload the previous GPA file",bg="#FFE9E3",font=Label_font)
+        reval=Label(root,text="Upload the regular GPA excel",bg="#FFE9E3",font=Label_font)
         reval.grid(row=6,column=0,sticky='w')
         reval_button=Button(root, text='Upload File', width=20,command = GPA_file_func)
         reval_button.grid(row=6,column=2,sticky='w')
@@ -151,12 +174,10 @@ def sem_type():
         upload.grid(row=5,column=0,sticky='w')
         upload_button=Button(root, text='Upload File', width=20,command = input_marks_file)
         upload_button.grid(row=5,column=2,sticky='w')
-        credits()
 
 
 def Cal_type():
     global semester_type,revalution,regular,upload,reval,reval_button,upload_button,sem_select_label,sem1_cbutton,sem2_cbutton,sem3_cbutton,sem4_cbutton,sem5_cbutton,sem6_cbutton,sem7_cbutton,sem8_cbutton
-    
     if C.get()==1:            
         try:
             reval.grid_forget()
@@ -207,12 +228,12 @@ Radiobutton(root,text="CGPA",value=2,variable=C,font=Label_font,bg="#FFE9E3",com
 
 #saving functionality
 def save():
-    global civil_credits,mech_credits,eee_credits,ece_credits,cse_credits,input_file,GPA_file   
+    global civil_credits,mech_credits,eee_credits,ece_credits,cse_credits,input_file,GPA_file,sem1_file,sem2_file,sem3_file,sem4_file,sem5_file,sem6_file,sem7_file,sem8_file   
     #checks calculation type selection
     if C.get()==1 or C.get()==2:
         #checks semester type selection
-        if S.get()==1 or S.get()==2:  
-            if C.get()==1:
+        if C.get()==1:
+            if S.get()==1 or S.get()==2:              
                 #checks input GPA file
                 if input_file!='':                     
                     df=tabula.read_pdf(input_file,pages="all")
@@ -220,7 +241,7 @@ def save():
                     for i in range(len(df)):
                         data=pd.concat([data,df[i]],ignore_index=True)
                     if S.get()==2 and GPA_file=='':
-                        Label(root,text='Please upload the previous GPA file',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
+                        Label(root,text='Please upload the regular GPA excel',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
                     else:                    
                         if S.get()==1:
                             try:
@@ -250,8 +271,21 @@ def save():
                     Label(root,text='Please upload the grades excel',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
                 #checks weather previous gpa file is uploaded or not
                 
-        else:
-            Label(root,text='Please select Semester type    ',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
+            else:
+                Label(root,text='Please select Semester type    ',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
+        elif C.get()==2:
+            sem_selection=[sem1.get(),sem2.get(),sem3.get(),sem4.get(),sem5.get(),sem6.get(),sem7.get(),sem8.get()]
+            sem_file_list=[sem1_file,sem2_file,sem3_file,sem4_file,sem5_file,sem6_file,sem7_file,sem8_file]
+            x=0
+            for i in range(len(sem_selection)):
+                if sem_selection[i]==1:
+                    if sem_file_list[i]=="":
+                        Label(root,text='Please Upload sem'+str(i+1)+"       ",font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
+                        x=1
+                        break
+            if x==0:
+                CGPA_cal(sem_selection,sem_file_list)
+                master.destroy()
     else:
         Label(root,text='Please select Calculation type  ',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
     
