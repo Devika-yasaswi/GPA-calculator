@@ -7,8 +7,6 @@ from Revaluation import *
 from CGPA import *
 from Statistics import *
 
-input_file=''
-GPA_file=''
 master=Tk()
 master.geometry("1000x850+300+0")
 master.configure(bg="#1E90FF")
@@ -27,13 +25,15 @@ my_canvas.create_text(900,750,text="K. Devika Yasaswi",font=("Vladimir Script",1
 root=Frame(my_canvas,padx=20,pady=20,bg="#FFE9E3",highlightbackground="#F88F8F", highlightthickness=3)
 root.configure()
 root.pack(pady=110)
-
+input_file=''
+GPA_file=''
+input_file_excel=''
 Label_font=('Times new Roman',18)   #Font style for labels
 Entry_font=('Times new Roman',15)   #Font style for entry boxes
 pdf_type = [("pdf Files",'.*pdf')]
 excel_type=[("xlsx Files",".*xlsx")]
 s_temp=0
-
+status1=0
 #Sem selection variables
 sem1=IntVar()
 sem2=IntVar()
@@ -63,6 +63,12 @@ def input_marks_file():
 def GPA_file_func():
     global GPA_file
     GPA_file=askopenfilename(filetypes=excel_type)
+
+#File reading function for SGPA-Regular
+def input_marks_excel():
+    global input_file_excel
+    input_file_excel=askopenfilename(filetypes=excel_type)
+
 def variable_sem_files():
     global sem_label_list,sem_button_list
     sem_selection=[sem1.get(),sem2.get(),sem3.get(),sem4.get(),sem5.get(),sem6.get(),sem7.get(),sem8.get()]
@@ -295,53 +301,113 @@ Label(root,text="Calculation Type",font=Label_font,bg="#FFE9E3").grid(row=0,colu
 Radiobutton(root,text="SGPA",value=1,variable=C,font=Entry_font,bg="#FFE9E3",command=Cal_type).grid(row=0,column=2,sticky='w')
 Radiobutton(root,text="CGPA",value=2,variable=C,font=Entry_font,bg="#FFE9E3",command=Cal_type).grid(row=1,column=2,sticky='w')   
 Radiobutton(root,text="Get statistics",value=3,variable=C,font=Entry_font,bg="#FFE9E3",command=Cal_type).grid(row=2,column=2,sticky='w')
+
+# Labels needed in saving functionality
+upload_regular_gpa=Label(root,text='Please upload the regular GPA excel',font=Entry_font,fg='red',bg="#FFE9E3")
+upload_result_label=Label(root,text='Please upload the result file',font=Entry_font,fg='red',bg="#FFE9E3")
+sem_type_select=Label(root,text='Please select Semester type',font=Entry_font,fg='red',bg="#FFE9E3")
+stat_file_error=Label(root,text='Uploaded GPA excel is in incorrect format',font=Entry_font,fg='red',bg="#FFE9E3")
+stat_gpa_file=Label(root,text='Please upload the calculated GPA excel',font=Entry_font,fg='red',bg="#FFE9E3")
+cal_type_select=Label(root,text='Please select Calculation type',font=Entry_font,fg='red',bg="#FFE9E3")
+file_error=Label(root,text='The uploaded pdf format is not suitable.',font=Entry_font,fg='red',bg="#FFE9E3")
+file_error_continue=Label(root,text='So please try uploading excel.',font=Entry_font,fg='red',bg="#FFE9E3")
+new_upload=Label(root,text="Upload the result excel",bg="#FFE9E3",font=Entry_font)
+new_upload_button=Button(root, text='Upload File', width=20,command = input_marks_excel)
 #saving functionality
 def save():
-    global civil_credits,mech_credits,eee_credits,ece_credits,cse_credits,input_file,GPA_file,sem1_file,sem2_file,sem3_file,sem4_file,sem5_file,sem6_file,sem7_file,sem8_file   
+    global status1,civil_credits,mech_credits,eee_credits,ece_credits,cse_credits,input_file,GPA_file,sem1_file,sem2_file,sem3_file,sem4_file,sem5_file,sem6_file,sem7_file,sem8_file   
+    try:
+        upload_regular_gpa.grid_forget()
+    except:
+        pass
+    try:
+        upload_result_label.grid_forget()
+    except:
+        pass
+    try:
+        sem_type_select.grid_forget()
+    except:
+        pass
+    try:
+        stat_file_error.grid_forget()
+    except:
+        pass
+    try:
+        stat_gpa_file.grid_forget()
+    except:
+        pass
+    try:
+        cal_type_select.grid_forget()
+    except:
+        pass
+    try:
+        file_error.grid_forget()
+        file_error_continue.grid_forget()
+    except:
+        pass
     #checks calculation type selection
     if C.get()==1 or C.get()==2 or C.get()==3:
         #checks semester type selection
         if C.get()==1:
             if S.get()==1 or S.get()==2:              
                 #checks input GPA file
-                if input_file!='':                     
-                    df=tabula.read_pdf(input_file,pages="all")
-                    data=pd.DataFrame()
-                    for i in range(len(df)):
-                        data=pd.concat([data,df[i]],ignore_index=True)
-                    if S.get()==2 and GPA_file=='':
-                        Label(root,text='Please upload the regular GPA excel',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
-                    else:                    
-                        if S.get()==1:
-                            try:
-                                rno_list=[]
-                                for i in range(len(data)):
-                                        x=int(data['Htno'][i][7:10])
-                                        rno_list.append(data['Htno'][i][0:6])
-                                new_rno_list=list(set(rno_list))
-                                new=[]
-                                for i in new_rno_list:
-                                    new.append(rno_list.count(i))
-                                series=new_rno_list[new.index(max(new))]
-                                new_df=pd.DataFrame(columns=data.columns)
-                                series1=str(int(series[0:2])+1)+"035A"
-                                for i in range(len(data)):
-                                    if data.iloc[i,0][0:6]== series or data.iloc[i,0][0:6]==series1:
-                                        new_df.loc[len(new_df.index)]=list(data.iloc[i,:])
-                                Sgpa(new_df)
-                            except ValueError:
-                                pass
+                if input_file=='' and status1==0: 
+                    upload_result_label.grid(row=20,column=0,sticky='w') 
+                else: 
+                    def calculation(data):
+                        if S.get()==2 and GPA_file=='':
+                            upload_regular_gpa.grid(row=20,column=0,sticky='w')
+                        else:                    
+                            if S.get()==1:
+                                try:
+                                    rno_list=[]
+                                    for i in range(len(data)):
+                                            x=int(data['Htno'][i][7:10])
+                                            rno_list.append(data['Htno'][i][0:6])
+                                    new_rno_list=list(set(rno_list))
+                                    new=[]
+                                    for i in new_rno_list:
+                                        new.append(rno_list.count(i))
+                                    series=new_rno_list[new.index(max(new))]
+                                    new_df=pd.DataFrame(columns=data.columns)
+                                    series1=str(int(series[0:2])+1)+"035A"
+                                    for i in range(len(data)):
+                                        if data.iloc[i,0][0:6]== series or data.iloc[i,0][0:6]==series1:
+                                            new_df.loc[len(new_df.index)]=list(data.iloc[i,:])
+                                    Sgpa(new_df)
+                                except:
+                                    pass
+                            else:
+                                if S.get()==2:
+                                    reval_func(GPA_file,data)
+                            master.destroy()   
+                    if status1==0:               
+                        df=tabula.read_pdf(input_file,pages="all")
+                        data=pd.DataFrame()
+                        for i in range(len(df)):
+                            data=pd.concat([data,df[i]],ignore_index=True)
+                        try:
+                            if data[list(data.columns)[-1]].isnull().values.any():
+                                status1=1
+                                upload.grid_forget()
+                                upload_button.grid_forget()
+                                new_upload.grid(row=5,column=0,sticky='w',pady=6)
+                                new_upload_button.grid(row=5,column=2,sticky='w')
+                                file_error.grid(row=20,column=0,sticky='w')
+                                file_error_continue.grid(row=20,column=2,sticky='w')  
+                        except:    
+                            upload_regular_gpa.grid(row=20,column=0,sticky='w')                                       
+                        if status1==0:
+                            calculation(data)
+                    if status1==1:
+                        if input_file_excel =="":
+                            upload_regular_gpa.grid(row=20,column=0,sticky='w')
                         else:
-                            if S.get()==2:
-                                reval_func(GPA_file,data)
-                        master.destroy()
-                        
-                else:
-                    Label(root,text='Please upload the grades excel',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
-                #checks weather previous gpa file is uploaded or not
-                
+                                data=read_excel(input_file_excel)
+                                calculation(data)
+                                     
             else:
-                Label(root,text='Please select Semester type    ',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
+                sem_type_select.grid(row=20,column=0,sticky='w')
         elif C.get()==2:
             sem_selection=[sem1.get(),sem2.get(),sem3.get(),sem4.get(),sem5.get(),sem6.get(),sem7.get(),sem8.get()]
             sem_file_list=[sem1_file,sem2_file,sem3_file,sem4_file,sem5_file,sem6_file,sem7_file,sem8_file]
@@ -349,7 +415,7 @@ def save():
             for i in range(len(sem_selection)):
                 if sem_selection[i]==1:
                     if sem_file_list[i]=="":
-                        Label(root,text='Please Upload sem'+str(i+1)+"                 ",font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
+                        Label(root,text='Please Upload sem'+str(i+1),font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
                         x=1
                         break
             if x==0:
@@ -357,17 +423,20 @@ def save():
                 master.destroy()
         elif C.get()==3:
             if GPA_file !="":
-                get_statistics(GPA_file)
+                status3=get_statistics(GPA_file)
+                if status3==1:
+                   stat_file_error.grid(row=20,column=0,sticky='w')  
+                else:
+                    master.destroy()
             else:
-               Label(root,text='Please upload the calculated GPA excel',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w') 
+               stat_gpa_file.grid(row=20,column=0,sticky='w') 
     else:
-        Label(root,text='Please select Calculation type  ',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
+        cal_type_select.grid(row=20,column=0,sticky='w')
     
 #Reset functionality
 def reset():
     master.destroy()
     student_data()
-Label(root,text="  ",bg="#FFE9E3").grid(row=20,column=2)
 #Get result button
 Button(root,text="Get Result",command=save,font=('Times new Roman',18)).grid(row=21,column=2)
 #Reset button

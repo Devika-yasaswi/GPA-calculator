@@ -29,6 +29,8 @@ def get_statistics(file):
     ece_data=ece_data["ECE"]
     cse_data=read_excel(file,sheet_name=["CSE"])
     cse_data=cse_data["CSE"]
+    if "Points" not in list(civil_data.columns):
+        return 1
     files=[('xlsx files','*.xlsx')]
     output_file=asksaveasfile(mode='wb',filetypes = files,defaultextension=files)
     civil_data=branch_calculation(civil_data)
@@ -42,3 +44,4 @@ def get_statistics(file):
         mech_data.to_excel(output,sheet_name="Mechanical",index=False)
         ece_data.to_excel(output,sheet_name="ECE",index=False)
         cse_data.to_excel(output,sheet_name="CSE",index=False)
+    return 0
