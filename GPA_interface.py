@@ -1,10 +1,12 @@
 from tkinter import *
 from tkinter.filedialog import *
+from PIL import Image, ImageTk
+import tabula
 from regular_SGPA import *
 from Revaluation import *
 from CGPA import *
-from PIL import Image, ImageTk
-import tabula
+from Statistics import *
+
 input_file=''
 GPA_file=''
 master=Tk()
@@ -26,7 +28,7 @@ root=Frame(my_canvas,padx=20,pady=20,bg="#FFE9E3",highlightbackground="#F88F8F",
 root.configure()
 root.pack(pady=110)
 
-Label_font=('Times new Roman',20)   #Font style for labels
+Label_font=('Times new Roman',18)   #Font style for labels
 Entry_font=('Times new Roman',15)   #Font style for entry boxes
 pdf_type = [("pdf Files",'.*pdf')]
 excel_type=[("xlsx Files",".*xlsx")]
@@ -62,7 +64,7 @@ def GPA_file_func():
     global GPA_file
     GPA_file=askopenfilename(filetypes=excel_type)
 def variable_sem_files():
-    global sem_label_list,sem_button_list,s_temp
+    global sem_label_list,sem_button_list
     sem_selection=[sem1.get(),sem2.get(),sem3.get(),sem4.get(),sem5.get(),sem6.get(),sem7.get(),sem8.get()]
     if 1 in sem_selection:        
         try:
@@ -73,27 +75,28 @@ def variable_sem_files():
         except:
             pass
         upload_sem_files()
-    
 
-def semester():
+#Semester selection check boxes   
+sem_select_label=Label(root,text="Choose Semesters for CGPA",font=Label_font,bg="#FFE9E3")
+sem1_cbutton=Checkbutton(root,text="Sem 1",font=Entry_font,variable=sem1,bg="#FFE9E3",command=variable_sem_files)
+sem2_cbutton=Checkbutton(root,text="Sem 2",font=Entry_font,variable=sem2,bg="#FFE9E3",command=variable_sem_files)
+sem3_cbutton=Checkbutton(root,text="Sem 3",font=Entry_font,variable=sem3,bg="#FFE9E3",command=variable_sem_files)
+sem4_cbutton=Checkbutton(root,text="Sem 4",font=Entry_font,variable=sem4,bg="#FFE9E3",command=variable_sem_files)
+sem5_cbutton=Checkbutton(root,text="Sem 5",font=Entry_font,variable=sem5,bg="#FFE9E3",command=variable_sem_files)
+sem6_cbutton=Checkbutton(root,text="Sem 6",font=Entry_font,variable=sem6,bg="#FFE9E3",command=variable_sem_files)
+sem7_cbutton=Checkbutton(root,text="Sem 7",font=Entry_font,variable=sem7,bg="#FFE9E3",command=variable_sem_files)
+sem8_cbutton=Checkbutton(root,text="Sem 8",font=Entry_font,variable=sem8,bg="#FFE9E3",command=variable_sem_files)
+
+def semester_selection():
     global sem_select_label,sem1_cbutton,sem2_cbutton,sem3_cbutton,sem4_cbutton,sem5_cbutton,sem6_cbutton,sem7_cbutton,sem8_cbutton,sem
-    sem_select_label=Label(root,text="Choose Semesters for CGPA",font=Label_font,bg="#FFE9E3")
     sem_select_label.grid(row=4,column=0,sticky='w')
-    sem1_cbutton=Checkbutton(root,text="Sem 1",font=Entry_font,variable=sem1,bg="#FFE9E3",command=variable_sem_files)
-    sem1_cbutton.grid(row=4,column=2,sticky='w')
-    sem2_cbutton=Checkbutton(root,text="Sem 2",font=Entry_font,variable=sem2,bg="#FFE9E3",command=variable_sem_files)
-    sem2_cbutton.grid(row=4,column=3,sticky='w')
-    sem3_cbutton=Checkbutton(root,text="Sem 3",font=Entry_font,variable=sem3,bg="#FFE9E3",command=variable_sem_files)
-    sem3_cbutton.grid(row=5,column=2,sticky='w')
-    sem4_cbutton=Checkbutton(root,text="Sem 4",font=Entry_font,variable=sem4,bg="#FFE9E3",command=variable_sem_files)
-    sem4_cbutton.grid(row=5,column=3,sticky='w')
-    sem5_cbutton=Checkbutton(root,text="Sem 5",font=Entry_font,variable=sem5,bg="#FFE9E3",command=variable_sem_files)
-    sem5_cbutton.grid(row=6,column=2,sticky='w')
-    sem6_cbutton=Checkbutton(root,text="Sem 6",font=Entry_font,variable=sem6,bg="#FFE9E3",command=variable_sem_files)
+    sem1_cbutton.grid(row=4,column=2,sticky='w')    
+    sem2_cbutton.grid(row=4,column=3,sticky='w')    
+    sem3_cbutton.grid(row=5,column=2,sticky='w')    
+    sem4_cbutton.grid(row=5,column=3,sticky='w')    
+    sem5_cbutton.grid(row=6,column=2,sticky='w')    
     sem6_cbutton.grid(row=6,column=3,sticky='w')
-    sem7_cbutton=Checkbutton(root,text="Sem 7",font=Entry_font,variable=sem7,bg="#FFE9E3",command=variable_sem_files)
     sem7_cbutton.grid(row=7,column=2,sticky='w')
-    sem8_cbutton=Checkbutton(root,text="Sem 8",font=Entry_font,variable=sem8,bg="#FFE9E3",command=variable_sem_files)
     sem8_cbutton.grid(row=7,column=3,sticky='w')
 #Sem SGPA file upload functions for CGPA calculation
 def sem1_file_function():
@@ -137,6 +140,7 @@ sem7_label=Label(root,text="Sem7 SGPA file",font=Entry_font,bg="#FFE9E3")
 sem7_button=Button(root,text="Upload file",command=sem7_file_function)
 sem8_label=Label(root,text="Sem8 SGPA file",font=Entry_font,bg="#FFE9E3")
 sem8_button=Button(root,text="Upload file",command=sem8_file_function)
+
 #sem files uploading labels and buttons
 sem_label_list=[sem1_label,sem2_label,sem3_label,sem4_label,sem5_label,sem6_label,sem7_label,sem8_label]
 sem_button_list=[sem1_button,sem2_button,sem3_button,sem4_button,sem5_button,sem6_button,sem7_button,sem8_button]
@@ -146,7 +150,7 @@ def upload_sem_files():
     sem_selection=[sem1.get(),sem2.get(),sem3.get(),sem4.get(),sem5.get(),sem6.get(),sem7.get(),sem8.get()]
     for i in range(len(sem_selection)):
         if sem_selection[i]==1:
-            sem_label_list[i].grid(row=r,column=0,sticky='w')
+            sem_label_list[i].grid(row=r,column=0,sticky='w',pady=4)
             sem_button_list[i].grid(row=r,column=2,sticky='w')
             r+=1
 C=IntVar()
@@ -154,7 +158,7 @@ S=IntVar()
 def sem_type():
     global reval,reval_button,upload,upload_button
     if S.get()==2:
-        reval=Label(root,text="Upload the regular GPA excel",bg="#FFE9E3",font=Label_font)
+        reval=Label(root,text="Upload the regular GPA excel",bg="#FFE9E3",font=Entry_font)
         reval.grid(row=6,column=0,sticky='w')
         reval_button=Button(root, text='Upload File', width=20,command = GPA_file_func)
         reval_button.grid(row=6,column=2,sticky='w')
@@ -170,18 +174,31 @@ def sem_type():
             upload_button.grid_forget()
         except:
             pass
-        upload=Label(root,text="Upload the grades excel  ",bg="#FFE9E3",font=Label_font)
-        upload.grid(row=5,column=0,sticky='w')
+        upload=Label(root,text="Upload the result pdf  ",bg="#FFE9E3",font=Entry_font)
+        upload.grid(row=5,column=0,sticky='w',pady=6)
         upload_button=Button(root, text='Upload File', width=20,command = input_marks_file)
         upload_button.grid(row=5,column=2,sticky='w')
 
+#Labels and buttons used in cal_type function
+semester_type=Label(root,text="Semester Type",font=Label_font,bg="#FFE9E3")
+regular=Radiobutton(root,text="Regular",value=1,variable=S,font=Entry_font,bg="#FFE9E3",command=sem_type)
+revalution=Radiobutton(root,text="Supplementary/Revaluation",value=2,variable=S,font=Entry_font,bg="#FFE9E3",command=sem_type)
+stats_file_label=Label(root,text="Upload calculated GPA file",font=Entry_font,bg="#FFE9E3")
+stats_upload_button=Button(root,text="Upload file",width=20,command=GPA_file_func)
 
 def Cal_type():
-    global semester_type,revalution,regular,upload,reval,reval_button,upload_button,sem_select_label,sem1_cbutton,sem2_cbutton,sem3_cbutton,sem4_cbutton,sem5_cbutton,sem6_cbutton,sem7_cbutton,sem8_cbutton
+    global semester_type,revalution,regular,upload,reval,reval_button,upload_button,sem_select_label,sem1_cbutton,sem2_cbutton,sem3_cbutton,sem4_cbutton,sem5_cbutton,sem6_cbutton,sem7_cbutton,sem8_cbutton,stats_file_label,stats_upload_button
     if C.get()==1:            
         try:
             reval.grid_forget()
             reval_button.grid_forget()
+        except:
+            pass
+        try:
+            sem_selection=[0,0,0,0,0,0,0,0]
+            for i in range(len(sem_selection)):
+                sem_label_list[i].grid_forget()
+                sem_button_list[i].grid_forget()
         except:
             pass
         try:
@@ -202,15 +219,17 @@ def Cal_type():
                 sem_button_list[i].grid_forget()
         except:
             pass
-        semester_type=Label(root,text="Semester Type",font=Label_font,bg="#FFE9E3")
-        semester_type.grid(row=3,column=0,sticky='w')
-        regular=Radiobutton(root,text="Regular",value=1,variable=S,font=Label_font,bg="#FFE9E3",command=sem_type)
-        regular.grid(row=3,column=2,sticky='w')
-        revalution=Radiobutton(root,text="Supplementary/Revaluation",value=2,variable=S,font=Label_font,bg="#FFE9E3",command=sem_type)
+        try:
+            stats_file_label.grid_forget()
+            stats_upload_button.grid_forget()
+        except:
+            pass        
+        semester_type.grid(row=3,column=0,sticky='w')        
+        regular.grid(row=3,column=2,sticky='w')        
         revalution.grid(row=4,column=2,sticky='w')
     elif C.get()==2:
         try:
-            semester()
+            semester_selection()
             semester_type.grid_forget()
             regular.grid_forget()
             revalution.grid_forget()
@@ -220,17 +239,67 @@ def Cal_type():
             reval_button.grid_forget()                               
         except:
             pass
+        try:
+            stats_file_label.grid_forget()
+            stats_upload_button.grid_forget()
+        except:
+            pass
+    elif C.get()==3:
+        try:
+            semester_selection()
+            semester_type.grid_forget()
+            regular.grid_forget()
+            revalution.grid_forget()
+            upload.grid_forget()
+            upload_button.grid_forget() 
+            reval.grid_forget()
+            reval_button.grid_forget()                               
+        except:
+            pass
+        try:
+            reval.grid_forget()
+            reval_button.grid_forget()
+        except:
+            pass
+        try:
+            sem_selection=[0,0,0,0,0,0,0,0]
+            for i in range(len(sem_selection)):
+                sem_label_list[i].grid_forget()
+                sem_button_list[i].grid_forget()
+        except:
+            pass
+        try:
+            sem_select_label.grid_forget()
+            sem1_cbutton.grid_forget()
+            sem2_cbutton.grid_forget()
+            sem3_cbutton.grid_forget()
+            sem4_cbutton.grid_forget()
+            sem5_cbutton.grid_forget()
+            sem6_cbutton.grid_forget()
+            sem7_cbutton.grid_forget()
+            sem8_cbutton.grid_forget()
+        except:
+            pass
+        try:
+            for i in range(sem.get()):
+                sem_label_list[i].grid_forget()
+                sem_button_list[i].grid_forget()
+        except:
+            pass        
+        stats_file_label.grid(row=3,column=0,sticky='w')
+        stats_upload_button.grid(row=3,column=2,sticky='w')
+
 
 #Calculation type SGPA=1, CGPA=2
-Label(root,text="Calculation Type",font=Label_font,bg="#FFE9E3").grid(row=1,column=0,sticky='w')
-Radiobutton(root,text="SGPA",value=1,variable=C,font=Label_font,bg="#FFE9E3",command=Cal_type).grid(row=1,column=2,sticky='w')
-Radiobutton(root,text="CGPA",value=2,variable=C,font=Label_font,bg="#FFE9E3",command=Cal_type).grid(row=2,column=2,sticky='w')   
-
+Label(root,text="Calculation Type",font=Label_font,bg="#FFE9E3").grid(row=0,column=0,sticky='w')
+Radiobutton(root,text="SGPA",value=1,variable=C,font=Entry_font,bg="#FFE9E3",command=Cal_type).grid(row=0,column=2,sticky='w')
+Radiobutton(root,text="CGPA",value=2,variable=C,font=Entry_font,bg="#FFE9E3",command=Cal_type).grid(row=1,column=2,sticky='w')   
+Radiobutton(root,text="Get statistics",value=3,variable=C,font=Entry_font,bg="#FFE9E3",command=Cal_type).grid(row=2,column=2,sticky='w')
 #saving functionality
 def save():
     global civil_credits,mech_credits,eee_credits,ece_credits,cse_credits,input_file,GPA_file,sem1_file,sem2_file,sem3_file,sem4_file,sem5_file,sem6_file,sem7_file,sem8_file   
     #checks calculation type selection
-    if C.get()==1 or C.get()==2:
+    if C.get()==1 or C.get()==2 or C.get()==3:
         #checks semester type selection
         if C.get()==1:
             if S.get()==1 or S.get()==2:              
@@ -280,12 +349,17 @@ def save():
             for i in range(len(sem_selection)):
                 if sem_selection[i]==1:
                     if sem_file_list[i]=="":
-                        Label(root,text='Please Upload sem'+str(i+1)+"       ",font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
+                        Label(root,text='Please Upload sem'+str(i+1)+"                 ",font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
                         x=1
                         break
             if x==0:
                 CGPA_cal(sem_selection,sem_file_list)
                 master.destroy()
+        elif C.get()==3:
+            if GPA_file !="":
+                get_statistics(GPA_file)
+            else:
+               Label(root,text='Please upload the calculated GPA excel',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w') 
     else:
         Label(root,text='Please select Calculation type  ',font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
     
