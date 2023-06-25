@@ -14,8 +14,7 @@ def CGPA_cal(sem_selection,sem_file_list):
     mech_final_df=DataFrame()
     ece_final_df=DataFrame()
     cse_final_df=DataFrame()
-    files=[('xlsx files','*.xlsx')]
-    file=asksaveasfile(mode='wb',filetypes = files,defaultextension=files)
+    
     def final_df_cal(final_df,df,i):
         df=df[["Roll_No","Total Credits","SGPA","Backlogs"]]
         if len(final_df.columns)==0:
@@ -26,13 +25,18 @@ def CGPA_cal(sem_selection,sem_file_list):
         return final_df
     for i in range(len(sem_selection)):
         if sem_selection[i]==1:
-            civil_df,eee_df,mech_df,ece_df,cse_df=excel_to_dataframe(sem_file_list[i])
-            civil_final_df=final_df_cal(civil_final_df,civil_df,i)
-            eee_final_df=final_df_cal(eee_final_df,eee_df,i)
-            mech_final_df=final_df_cal(mech_final_df,mech_df,i)
-            ece_final_df=final_df_cal(ece_final_df,ece_df,i)
-            cse_final_df=final_df_cal(cse_final_df,cse_df,i)
-    
+            try:
+                civil_df,eee_df,mech_df,ece_df,cse_df=excel_to_dataframe(sem_file_list[i])
+                civil_final_df=final_df_cal(civil_final_df,civil_df,i)
+                eee_final_df=final_df_cal(eee_final_df,eee_df,i)
+                mech_final_df=final_df_cal(mech_final_df,mech_df,i)
+                ece_final_df=final_df_cal(ece_final_df,ece_df,i)
+                cse_final_df=final_df_cal(cse_final_df,cse_df,i)
+            except:
+                return i+1
+            if "Roll_No" not in civil_df.columns or "Total Credits" not in civil_df.columns or "SGPA" not in civil_df.columns or "Backlogs" not in civil_df.columns:
+                return i+1
+                
     def CGPA_calculations(df):    
         df["CGPA"]=0
         df["Total backlogs"]=0
@@ -50,16 +54,18 @@ def CGPA_cal(sem_selection,sem_file_list):
             value=0
             gpa=0
             backlogs=0
-        return df
-    
+        return df    
     civil_final_df=CGPA_calculations(civil_final_df)
     eee_final_df=CGPA_calculations(eee_final_df)
     mech_final_df=CGPA_calculations(mech_final_df)
     ece_final_df=CGPA_calculations(ece_final_df)
     cse_final_df=CGPA_calculations(cse_final_df)
+    files=[('xlsx files','*.xlsx')]
+    file=asksaveasfile(mode='wb',filetypes = files,defaultextension=files)
     with ExcelWriter(file,engine='openpyxl',mode='w') as output:
         civil_final_df.to_excel(output,sheet_name="Civil",index=False)
         eee_final_df.to_excel(output,sheet_name="EEE",index=False)
         mech_final_df.to_excel(output,sheet_name="Mechanical",index=False)
         ece_final_df.to_excel(output,sheet_name="ECE",index=False)
         cse_final_df.to_excel(output,sheet_name="CSE",index=False)
+    return 0

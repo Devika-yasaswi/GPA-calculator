@@ -313,9 +313,10 @@ file_error=Label(root,text='The uploaded pdf format is not suitable.',font=Entry
 file_error_continue=Label(root,text='So please try uploading excel.',font=Entry_font,fg='red',bg="#FFE9E3")
 new_upload=Label(root,text="Upload the result excel",bg="#FFE9E3",font=Entry_font)
 new_upload_button=Button(root, text='Upload File', width=20,command = input_marks_excel)
+wrong_upload=Label(root,text='The uploaded excel format is not suitable.',font=Entry_font,fg='red',bg="#FFE9E3")
 #saving functionality
 def save():
-    global status1,civil_credits,mech_credits,eee_credits,ece_credits,cse_credits,input_file,GPA_file,sem1_file,sem2_file,sem3_file,sem4_file,sem5_file,sem6_file,sem7_file,sem8_file   
+    global data,status1,civil_credits,mech_credits,eee_credits,ece_credits,cse_credits,input_file,GPA_file,sem1_file,sem2_file,sem3_file,sem4_file,sem5_file,sem6_file,sem7_file,sem8_file   
     try:
         upload_regular_gpa.grid_forget()
     except:
@@ -345,6 +346,10 @@ def save():
         file_error_continue.grid_forget()
     except:
         pass
+    try:
+        wrong_upload.grid_forget()
+    except:
+        pass
     #checks calculation type selection
     if C.get()==1 or C.get()==2 or C.get()==3:
         #checks semester type selection
@@ -359,7 +364,7 @@ def save():
                             upload_regular_gpa.grid(row=20,column=0,sticky='w')
                         else:                    
                             if S.get()==1:
-                                try:
+                                
                                     rno_list=[]
                                     for i in range(len(data)):
                                             x=int(data['Htno'][i][7:10])
@@ -375,8 +380,7 @@ def save():
                                         if data.iloc[i,0][0:6]== series or data.iloc[i,0][0:6]==series1:
                                             new_df.loc[len(new_df.index)]=list(data.iloc[i,:])
                                     Sgpa(new_df)
-                                except:
-                                    pass
+                                
                             else:
                                 if S.get()==2:
                                     reval_func(GPA_file,data)
@@ -389,21 +393,26 @@ def save():
                         try:
                             if data[list(data.columns)[-1]].isnull().values.any():
                                 status1=1
-                                upload.grid_forget()
-                                upload_button.grid_forget()
-                                new_upload.grid(row=5,column=0,sticky='w',pady=6)
-                                new_upload_button.grid(row=5,column=2,sticky='w')
-                                file_error.grid(row=20,column=0,sticky='w')
-                                file_error_continue.grid(row=20,column=2,sticky='w')  
-                        except:    
-                            upload_regular_gpa.grid(row=20,column=0,sticky='w')                                       
-                        if status1==0:
+                                                                
+                        except: 
+                            status1=1
+                        finally:
+                            upload.grid_forget()
+                            upload_button.grid_forget()
+                            new_upload.grid(row=5,column=0,sticky='w',pady=6)
+                            new_upload_button.grid(row=5,column=2,sticky='w')   
+                            file_error.grid(row=20,column=0,sticky='w')    
+                            file_error_continue.grid(row=20,column=2,sticky='w')                               
+                        if status1==0 and data.empty==False:
                             calculation(data)
                     if status1==1:
                         if input_file_excel =="":
                             upload_regular_gpa.grid(row=20,column=0,sticky='w')
                         else:
-                                data=read_excel(input_file_excel)
+                            data=read_excel(input_file_excel)
+                            if "Htno" not in data.columns:
+                                wrong_upload.grid(row=20,column=0,sticky='w')
+                            else:
                                 calculation(data)
                                      
             else:
@@ -415,12 +424,15 @@ def save():
             for i in range(len(sem_selection)):
                 if sem_selection[i]==1:
                     if sem_file_list[i]=="":
-                        Label(root,text='Please Upload sem'+str(i+1),font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
+                        Label(root,text='Please Upload Sem'+str(i+1)+" file          ",font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
                         x=1
                         break
             if x==0:
-                CGPA_cal(sem_selection,sem_file_list)
-                master.destroy()
+                status2=CGPA_cal(sem_selection,sem_file_list)
+                if status2==0:                  
+                    master.destroy()
+                else:
+                    Label(root,text='Sem'+str(status2)+" file is in incorrect format",font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
         elif C.get()==3:
             if GPA_file !="":
                 status3=get_statistics(GPA_file)

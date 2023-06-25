@@ -19,16 +19,19 @@ def branch_calculation(data):
         df.loc[len(df.index)]=temp_list
     return df
 def get_statistics(file):
-    civil_data=read_excel(file,sheet_name=["Civil"])
-    civil_data=DataFrame(civil_data["Civil"])
-    eee_data=read_excel(file,sheet_name=["EEE"])
-    eee_data=eee_data["EEE"]
-    mech_data=read_excel(file,sheet_name=["Mechanical"])
-    mech_data=mech_data["Mechanical"]
-    ece_data=read_excel(file,sheet_name=["ECE"])
-    ece_data=ece_data["ECE"]
-    cse_data=read_excel(file,sheet_name=["CSE"])
-    cse_data=cse_data["CSE"]
+    try:
+        civil_data=read_excel(file,sheet_name=["Civil"])
+        civil_data=DataFrame(civil_data["Civil"])
+        eee_data=read_excel(file,sheet_name=["EEE"])
+        eee_data=eee_data["EEE"]
+        mech_data=read_excel(file,sheet_name=["Mechanical"])
+        mech_data=mech_data["Mechanical"]
+        ece_data=read_excel(file,sheet_name=["ECE"])
+        ece_data=ece_data["ECE"]
+        cse_data=read_excel(file,sheet_name=["CSE"])
+        cse_data=cse_data["CSE"]
+    except:
+        return 1
     if "Points" not in list(civil_data.columns):
         return 1
     files=[('xlsx files','*.xlsx')]

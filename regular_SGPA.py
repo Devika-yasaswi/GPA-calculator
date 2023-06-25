@@ -19,7 +19,6 @@ def Sgpa(data):
     ece_credits=0
     cse_credits=0
     GBM=0
-    rno_list=[]
 
     #Deleting data frame for the creation of new branch dataframe with same name
     def delete():
@@ -37,7 +36,6 @@ def Sgpa(data):
     #Calculating credits
     for i in range(len(data)):
         x=int(data['Htno'][i][7:10])
-        rno_list.append(data['Htno'][i][0:6])
         if data['Subcode'][i] not in sub:
             sub.append(data['Subcode'][i])
             total+=float(data['Credits'][i])
@@ -100,9 +98,7 @@ def Sgpa(data):
                     student_data.append(GPA)                    
                     print(student_data)
                     print(a,'=',GPA)
-                    
                     df.loc[len(df.index)]=student_data 
-                    
                     student_data.clear()
                     a=a+1
                     GPA=0
@@ -164,10 +160,12 @@ def Sgpa(data):
                 sub=[]
         
         #Adding subject name columns in the dataframe based on the subject code
-            if data['Subcode'][i] not in sub:
-                
-                sub.append(data['Subcode'][i])
-                df[data['Subname'][i]+' ('+data['Subcode'][i]+')']=[]
+            if data['Subcode'][i] not in sub:            
+                try:                    
+                    df[data['Subname'][i]+' ('+data['Subcode'][i]+')']=[]
+                    sub.append(data['Subcode'][i])
+                except:
+                    continue
 
             
             #Grades acquired based on the marks of the students 
