@@ -98,7 +98,10 @@ def Sgpa(data):
                     student_data.append(GPA)                    
                     print(student_data)
                     print(a,'=',GPA)
-                    df.loc[len(df.index)]=student_data 
+                    try:
+                        df.loc[len(df.index)]=student_data 
+                    except:
+                        pass
                     student_data.clear()
                     a=a+1
                     GPA=0
