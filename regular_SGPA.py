@@ -1,5 +1,6 @@
 import pandas as pd
 from tkinter.filedialog import *
+from Statistics import get_statistics
 def Sgpa(data):
     #Initializations
     global GPA,a,roll_no,student_data,start,start_x,df,civil_credits,eee_credits,mech_credits,ece_credits,cse_credits,GBM
@@ -27,7 +28,7 @@ def Sgpa(data):
             del df
             del d
             df=pd.DataFrame({"Roll_No":[]})
-            print(len(df))
+            #print(len(df))
         
     #Calculation and entering marks of the student into data frame
     files=[('xlsx files','*.xlsx')]
@@ -56,19 +57,17 @@ def Sgpa(data):
             elif x//100==5:
                 if "MP" not in student_data and 'F' not in student_data and "AB" not in student_data:
                      cse_credits=total
-            print(student_data)
-            print(x," ",civil_credits," ",eee_credits," ",mech_credits," ",ece_credits," ",cse_credits)
+            #print(student_data)
+            #print(x," ",civil_credits," ",eee_credits," ",mech_credits," ",ece_credits," ",cse_credits)
             sub=[]
             total=0
             student_data=[data['Htno'][i]]        
-    print(civil_credits," ",eee_credits," ",mech_credits," ",ece_credits," ",cse_credits)
+    #print(civil_credits," ",eee_credits," ",mech_credits," ",ece_credits," ",cse_credits)
     student_data=[]
     #calculating and writing GPA to output file
-    with pd.ExcelWriter(file.name,engine='openpyxl',mode='w') as output:
-    
-        for i in range(len(data)):
-        
-            print(i,data['Htno'][i])
+    with pd.ExcelWriter(file.name,engine='openpyxl',mode='w') as output:    
+        for i in range(len(data)):        
+            #print(i,data['Htno'][i])
             d=str(data['Htno'][i])
             x=int(d[7:10])
                     
@@ -84,6 +83,7 @@ def Sgpa(data):
                         df['Pass Percentage']=[]
                         df['SGPA']=[]
                         df['Points']=[]
+                        
                     student_data.append(GBM)    
                     
                     student_data.append(total_credits)
@@ -96,8 +96,8 @@ def Sgpa(data):
                     student_data.append(GPA)                       
                     GPA=GPA/total_credits                 
                     student_data.append(GPA)                    
-                    print(student_data)
-                    print(a,'=',GPA)
+                    #print(student_data)
+                    #print(a,'=',GPA)
                     try:
                         df.loc[len(df.index)]=student_data 
                     except:
@@ -120,16 +120,16 @@ def Sgpa(data):
                     start_x=2
                     delete()
                 a=int(d[7])*100+1
-                print("a=",a)
+                #print("a=",a)
                 if int(d[7])==1:
-                    total_credits=civil_credits
-                if int(d[7])==2:
-                    
+                    total_credits=civil_credits                
+                if int(d[7])==2:                                       
                     if start_x==2:
-                        df.to_excel(output,sheet_name="Civil",index=False,startrow=civil,header=None)
+                        df.to_excel(output,sheet_name="CE",index=False,startrow=civil,header=None)
                     else:
                         civil=len(df.index)+1
-                        df.to_excel(output,sheet_name="Civil",index=False)
+                        df.to_excel(output,sheet_name="CE",index=False)
+                        df.to_excel(output,sheet_name="CE stats",index=False)
                     total_credits=eee_credits
                     delete()
                     df["Roll_No"]=[]
@@ -139,15 +139,17 @@ def Sgpa(data):
                     else:
                         eee=len(df.index)+1
                         df.to_excel(output,sheet_name="EEE",index=False)
+                        df.to_excel(output,sheet_name="EEE stats",index=False)
                     total_credits=mech_credits
                     delete()
                     df["Roll_No"]=[]
                 if int(d[7])==4:
                     if start_x==2:
-                        df.to_excel(output,sheet_name="Mechanical",index=False,startrow=mech,header=None)
+                        df.to_excel(output,sheet_name="ME",index=False,startrow=mech,header=None)
                     else:
                         mech=len(df.index)+1
-                        df.to_excel(output,sheet_name='Mechanical',index=False)
+                        df.to_excel(output,sheet_name='ME',index=False)
+                        df.to_excel(output,sheet_name='ME stats',index=False)
                     total_credits=ece_credits
                     delete()
                     df["Roll_No"]=[]
@@ -157,6 +159,7 @@ def Sgpa(data):
                     else:
                         ece=len(df.index)+1
                         df.to_excel(output,sheet_name="ECE",index=False)
+                        df.to_excel(output,sheet_name="ECE stats",index=False)
                     total_credits=cse_credits
                     delete()
                     df["Roll_No"]=[]
@@ -223,3 +226,4 @@ def Sgpa(data):
             df.to_excel(output,sheet_name="CSE",index=False,startrow=cse,header=None)
         else:
             df.to_excel(output,sheet_name="CSE",index=False,startrow=cse)
+    get_statistics(file.name)

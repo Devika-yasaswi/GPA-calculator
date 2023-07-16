@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter.filedialog import *
 from PIL import Image, ImageTk
+from pyautogui import alert
+import pymsgbox
 import tabula
 from regular_SGPA import *
 from Revaluation import *
@@ -8,22 +10,21 @@ from CGPA import *
 from Statistics import *
 
 master=Tk()
-master.geometry("1000x850+300+0")
+master.geometry("1250x900+300+0")
 master.configure(bg="#1E90FF")
 master.title("CGPA/SGPA Calculator")
 img=PhotoImage(file="Background.png")
 logo=Image.open("JNTUK logo.png")
-new_logo=logo.resize((50,50))
+new_logo=logo.resize((100,100))
 new_logo=ImageTk.PhotoImage(new_logo)
-my_canvas=Canvas(master,width=1000,height=750)
+my_canvas=Canvas(master,width=1000,height=1000)
 my_canvas.pack(fill='both',expand=True)
 my_canvas.create_image(0,0,image=img,anchor="nw")
 my_canvas.create_image(20,20,image=new_logo,anchor="nw")
-my_canvas.create_text(70,20,text="University College of Engineering Narasaraopet",anchor="nw",font=('Algerian',25),fill="White")
-my_canvas.create_text(350,60,text="CGPA/SGPA Calculator",anchor="nw",font=('Algerian',20),fill="White")
-my_canvas.create_text(900,750,text="K. Devika Yasaswi",font=("Vladimir Script",18))
-root=Frame(my_canvas,padx=20,pady=20,bg="#FFE9E3",highlightbackground="#F88F8F", highlightthickness=3)
-root.configure()
+my_canvas.create_text(110,20,text="University College of Engineering Narasaraopet",anchor="nw",font=('Algerian',25),fill="Black")
+my_canvas.create_text(150,60,text="Jawaharlal Nehru Technological University Kakinada",anchor="nw",font=('Algerian',20),fill="Black")
+my_canvas.create_text(1100,850,text="K. Devika Yasaswi",font=("Vladimir Script",18))
+root=Frame(my_canvas,padx=20,pady=20,bg="#FFE9E3")
 root.pack(pady=110)
 input_file=''
 GPA_file=''
@@ -34,6 +35,7 @@ pdf_type = [("pdf Files",'.*pdf')]
 excel_type=[("xlsx Files",".*xlsx")]
 s_temp=0
 status1=0
+    
 #Sem selection variables
 sem1=IntVar()
 sem2=IntVar()
@@ -189,12 +191,11 @@ def sem_type():
 semester_type=Label(root,text="Semester Type",font=Label_font,bg="#FFE9E3")
 regular=Radiobutton(root,text="Regular",value=1,variable=S,font=Entry_font,bg="#FFE9E3",command=sem_type)
 revalution=Radiobutton(root,text="Supplementary/Revaluation",value=2,variable=S,font=Entry_font,bg="#FFE9E3",command=sem_type)
-stats_file_label=Label(root,text="Upload calculated GPA file",font=Entry_font,bg="#FFE9E3")
-stats_upload_button=Button(root,text="Upload file",width=20,command=GPA_file_func)
+
 
 def Cal_type():
-    global semester_type,revalution,regular,upload,reval,reval_button,upload_button,sem_select_label,sem1_cbutton,sem2_cbutton,sem3_cbutton,sem4_cbutton,sem5_cbutton,sem6_cbutton,sem7_cbutton,sem8_cbutton,stats_file_label,stats_upload_button
-    if C.get()==1:            
+    global semester_type,revalution,regular,upload,reval,reval_button,upload_button,sem_select_label,sem1_cbutton,sem2_cbutton,sem3_cbutton,sem4_cbutton,sem5_cbutton,sem6_cbutton,sem7_cbutton,sem8_cbutton
+    if C.get()==1:     
         try:
             reval.grid_forget()
             reval_button.grid_forget()
@@ -224,12 +225,7 @@ def Cal_type():
                 sem_label_list[i].grid_forget()
                 sem_button_list[i].grid_forget()
         except:
-            pass
-        try:
-            stats_file_label.grid_forget()
-            stats_upload_button.grid_forget()
-        except:
-            pass        
+            pass     
         semester_type.grid(row=3,column=0,sticky='w')        
         regular.grid(row=3,column=2,sticky='w')        
         revalution.grid(row=4,column=2,sticky='w')
@@ -245,69 +241,16 @@ def Cal_type():
             reval_button.grid_forget()                               
         except:
             pass
-        try:
-            stats_file_label.grid_forget()
-            stats_upload_button.grid_forget()
-        except:
-            pass
-    elif C.get()==3:
-        try:
-            semester_selection()
-            semester_type.grid_forget()
-            regular.grid_forget()
-            revalution.grid_forget()
-            upload.grid_forget()
-            upload_button.grid_forget() 
-            reval.grid_forget()
-            reval_button.grid_forget()                               
-        except:
-            pass
-        try:
-            reval.grid_forget()
-            reval_button.grid_forget()
-        except:
-            pass
-        try:
-            sem_selection=[0,0,0,0,0,0,0,0]
-            for i in range(len(sem_selection)):
-                sem_label_list[i].grid_forget()
-                sem_button_list[i].grid_forget()
-        except:
-            pass
-        try:
-            sem_select_label.grid_forget()
-            sem1_cbutton.grid_forget()
-            sem2_cbutton.grid_forget()
-            sem3_cbutton.grid_forget()
-            sem4_cbutton.grid_forget()
-            sem5_cbutton.grid_forget()
-            sem6_cbutton.grid_forget()
-            sem7_cbutton.grid_forget()
-            sem8_cbutton.grid_forget()
-        except:
-            pass
-        try:
-            for i in range(sem.get()):
-                sem_label_list[i].grid_forget()
-                sem_button_list[i].grid_forget()
-        except:
-            pass        
-        stats_file_label.grid(row=3,column=0,sticky='w')
-        stats_upload_button.grid(row=3,column=2,sticky='w')
-
 
 #Calculation type SGPA=1, CGPA=2
 Label(root,text="Calculation Type",font=Label_font,bg="#FFE9E3").grid(row=0,column=0,sticky='w')
 Radiobutton(root,text="SGPA",value=1,variable=C,font=Entry_font,bg="#FFE9E3",command=Cal_type).grid(row=0,column=2,sticky='w')
-Radiobutton(root,text="CGPA",value=2,variable=C,font=Entry_font,bg="#FFE9E3",command=Cal_type).grid(row=1,column=2,sticky='w')   
-Radiobutton(root,text="Get statistics",value=3,variable=C,font=Entry_font,bg="#FFE9E3",command=Cal_type).grid(row=2,column=2,sticky='w')
+Radiobutton(root,text="CGPA",value=2,variable=C,font=Entry_font,bg="#FFE9E3",command=Cal_type).grid(row=1,column=2,sticky='w')
 
 # Labels needed in saving functionality
 upload_regular_gpa=Label(root,text='Please upload the regular GPA excel',font=Entry_font,fg='red',bg="#FFE9E3")
 upload_result_label=Label(root,text='Please upload the result file',font=Entry_font,fg='red',bg="#FFE9E3")
 sem_type_select=Label(root,text='Please select Semester type',font=Entry_font,fg='red',bg="#FFE9E3")
-stat_file_error=Label(root,text='Uploaded GPA excel is in incorrect format',font=Entry_font,fg='red',bg="#FFE9E3")
-stat_gpa_file=Label(root,text='Please upload the calculated GPA excel',font=Entry_font,fg='red',bg="#FFE9E3")
 cal_type_select=Label(root,text='Please select Calculation type',font=Entry_font,fg='red',bg="#FFE9E3")
 file_error=Label(root,text='The uploaded pdf format is not suitable.',font=Entry_font,fg='red',bg="#FFE9E3")
 file_error_continue=Label(root,text='So please try uploading excel.',font=Entry_font,fg='red',bg="#FFE9E3")
@@ -330,14 +273,6 @@ def save():
     except:
         pass
     try:
-        stat_file_error.grid_forget()
-    except:
-        pass
-    try:
-        stat_gpa_file.grid_forget()
-    except:
-        pass
-    try:
         cal_type_select.grid_forget()
     except:
         pass
@@ -351,7 +286,7 @@ def save():
     except:
         pass
     #checks calculation type selection
-    if C.get()==1 or C.get()==2 or C.get()==3:
+    if C.get()==1 or C.get()==2:
         #checks semester type selection
         if C.get()==1:
             if S.get()==1 or S.get()==2:              
@@ -379,12 +314,14 @@ def save():
                                     for i in range(len(data)):
                                         if data.iloc[i,0][0:6]== series or data.iloc[i,0][0:6]==series1:
                                             new_df.loc[len(new_df.index)]=list(data.iloc[i,:])
-                                    Sgpa(new_df)
-                                
+                                    Sgpa(new_df)                                
                             else:
                                 if S.get()==2:
                                     reval_func(GPA_file,data)
-                            master.destroy()   
+                            pymsgbox.rootWindowPosition="+700+350"
+                            result=alert(text="Result file generation is completed",title="Status",button="Ok")                            
+                            if result=="Ok":
+                                master.destroy()   
                     if status1==0:               
                         df=tabula.read_pdf(input_file,pages="all")
                         data=pd.DataFrame()
@@ -392,17 +329,16 @@ def save():
                             data=pd.concat([data,df[i]],ignore_index=True)
                         try:
                             if data[list(data.columns)[-1]].isnull().values.any():
-                                status1=1
-                                                                
+                                status1=1                                                                
                         except: 
                             status1=1
-                        finally:
+                            file_error.grid(row=20,column=0,sticky='w')    
+                            file_error_continue.grid(row=20,column=2,sticky='w') 
                             upload.grid_forget()
                             upload_button.grid_forget()
                             new_upload.grid(row=5,column=0,sticky='w',pady=6)
                             new_upload_button.grid(row=5,column=2,sticky='w')   
-                            file_error.grid(row=20,column=0,sticky='w')    
-                            file_error_continue.grid(row=20,column=2,sticky='w')                               
+                                                        
                         if status1==0 and data.empty==False:
                             calculation(data)
                     if status1==1:
@@ -414,7 +350,7 @@ def save():
                                 wrong_upload.grid(row=20,column=0,sticky='w')
                             else:
                                 calculation(data)
-                                     
+                                    
             else:
                 sem_type_select.grid(row=20,column=0,sticky='w')
         elif C.get()==2:
@@ -433,24 +369,14 @@ def save():
                     master.destroy()
                 else:
                     Label(root,text='Sem'+str(status2)+" file is in incorrect format",font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
-        elif C.get()==3:
-            if GPA_file !="":
-                status3=get_statistics(GPA_file)
-                if status3==1:
-                   stat_file_error.grid(row=20,column=0,sticky='w')  
-                else:
-                    master.destroy()
-            else:
-               stat_gpa_file.grid(row=20,column=0,sticky='w') 
     else:
         cal_type_select.grid(row=20,column=0,sticky='w')
     
 #Reset functionality
-def reset():
+def userGuide():
     master.destroy()
-    student_data()
 #Get result button
-Button(root,text="Get Result",command=save,font=('Times new Roman',18)).grid(row=21,column=2)
+Button(root,text="Get Result",command=save,font=('Times new Roman',16)).grid(row=21,column=2)
 #Reset button
-Button(root,text="Reset",command=reset,font=('Times new Roman',18)).grid(row=21,column=0)
+Button(root,text="User Guide",command=userGuide,font=('Times new Roman',16)).grid(row=21,column=0)
 master.mainloop()

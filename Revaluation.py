@@ -1,5 +1,5 @@
 from pandas import *
-
+from Statistics import get_statistics
 def value(X):
      if X=="A+":
           return 10
@@ -74,3 +74,4 @@ def reval_func(GPA_file, data):
         mech.to_excel(output,sheet_name="Mechanical",index=False)
         ece.to_excel(output,sheet_name="ECE",index=False)
         cse.to_excel(output,sheet_name="CSE",index=False)
+    get_statistics(GPA_file)
