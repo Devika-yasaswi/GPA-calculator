@@ -13,7 +13,35 @@ def branch_calculation(data):
         passed=sub.count("A+")+sub.count("A")+sub.count("B")+sub.count("C")+sub.count("D")+sub.count("E")+sub.count("COMPLE")+sub.count("COMPLETED")
         temp_list.append(passed/total*100)
         df.loc[len(df.index)]=temp_list
+    count=0
+    count1=0
+    for i in range(len(data)):
+        new=data.iloc[i,1:-7]    
+        new=list(set(new))
+        if len(new)==1 and (new[0]=="AB" or new[i]=="ABSENT"):
+            count+=1
+        if len(new)!=1 and ("F" in new or "MP" in new or  "AB" in new or "ABSENT" in new or "MP" in new):
+            count1+=1
+    df1=DataFrame(columns=["Total no.of students","No.of students appeared","Pass percentage"])
+    new=[len(data),len(data)-count,(len(data)-count-count1)/(len(data)-count)*100]
+    df1.loc[len(df1.index)]=new
+    data=data.sort_values(by=["SGPA"])
+    df2=DataFrame(columns=["Place","Roll No","Points"])
+    x=1
+    temp=data.iloc[-1,-1]
+    for i in range(1,len(data)):
+        if x<3 or temp==data.iloc[-i,-1]:
+            if temp!=data.iloc[-i,-1]:
+                x+=1
+            new=[x,data.iloc[-i,0],data.iloc[-i,-1]]
+            temp=data.iloc[-i,-1]
+            df2.loc[len(df2.index)]=new     
+        elif x==3:
+            break
+    df=concat([df,df1,df2],axis=1)
     return df
+    
+
 def get_statistics(file):
     civil_data=read_excel(file,sheet_name=["CE"])
     civil_data=DataFrame(civil_data["CE"])

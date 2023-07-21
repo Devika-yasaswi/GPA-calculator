@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter.filedialog import *
-from PIL import Image, ImageTk
+import PIL
 from pyautogui import alert
 import pymsgbox
 import tabula
@@ -8,15 +8,16 @@ from regular_SGPA import *
 from Revaluation import *
 from CGPA import *
 from Statistics import *
+from User_guide import *
 
 master=Tk()
 master.geometry("1250x900+300+0")
 master.configure(bg="#1E90FF")
 master.title("CGPA/SGPA Calculator")
 img=PhotoImage(file="Background.png")
-logo=Image.open("JNTUK logo.png")
+logo=PIL.Image.open("JNTUK logo.png")
 new_logo=logo.resize((100,100))
-new_logo=ImageTk.PhotoImage(new_logo)
+new_logo=PIL.ImageTk.PhotoImage(new_logo)
 my_canvas=Canvas(master,width=1000,height=1000)
 my_canvas.pack(fill='both',expand=True)
 my_canvas.create_image(0,0,image=img,anchor="nw")
@@ -35,7 +36,6 @@ pdf_type = [("pdf Files",'.*pdf')]
 excel_type=[("xlsx Files",".*xlsx")]
 s_temp=0
 status1=0
-    
 #Sem selection variables
 sem1=IntVar()
 sem2=IntVar()
@@ -188,7 +188,7 @@ def sem_type():
         upload_button.grid(row=5,column=2,sticky='w')
 
 #Labels and buttons used in cal_type function
-semester_type=Label(root,text="Semester Type",font=Label_font,bg="#FFE9E3")
+semester_type=Label(root,text="File Type",font=Label_font,bg="#FFE9E3")
 regular=Radiobutton(root,text="Regular",value=1,variable=S,font=Entry_font,bg="#FFE9E3",command=sem_type)
 revalution=Radiobutton(root,text="Supplementary/Revaluation",value=2,variable=S,font=Entry_font,bg="#FFE9E3",command=sem_type)
 
@@ -243,7 +243,7 @@ def Cal_type():
             pass
 
 #Calculation type SGPA=1, CGPA=2
-Label(root,text="Calculation Type",font=Label_font,bg="#FFE9E3").grid(row=0,column=0,sticky='w')
+Label(root,text="Calculation Mode",font=Label_font,bg="#FFE9E3").grid(row=0,column=0,sticky='w')
 Radiobutton(root,text="SGPA",value=1,variable=C,font=Entry_font,bg="#FFE9E3",command=Cal_type).grid(row=0,column=2,sticky='w')
 Radiobutton(root,text="CGPA",value=2,variable=C,font=Entry_font,bg="#FFE9E3",command=Cal_type).grid(row=1,column=2,sticky='w')
 
@@ -257,6 +257,7 @@ file_error_continue=Label(root,text='So please try uploading excel.',font=Entry_
 new_upload=Label(root,text="Upload the result excel",bg="#FFE9E3",font=Entry_font)
 new_upload_button=Button(root, text='Upload File', width=20,command = input_marks_excel)
 wrong_upload=Label(root,text='The uploaded excel format is not suitable.',font=Entry_font,fg='red',bg="#FFE9E3")
+wrong_file=Label(root,text='The uploaded file is wrong! Try again.',font=Entry_font,fg='red',bg="#FFE9E3")
 #saving functionality
 def save():
     global data,status1,civil_credits,mech_credits,eee_credits,ece_credits,cse_credits,input_file,GPA_file,sem1_file,sem2_file,sem3_file,sem4_file,sem5_file,sem6_file,sem7_file,sem8_file   
@@ -283,6 +284,10 @@ def save():
         pass
     try:
         wrong_upload.grid_forget()
+    except:
+        pass
+    try:
+        wrong_file.grid_forget()
     except:
         pass
     #checks calculation type selection
@@ -314,7 +319,11 @@ def save():
                                     for i in range(len(data)):
                                         if data.iloc[i,0][0:6]== series or data.iloc[i,0][0:6]==series1:
                                             new_df.loc[len(new_df.index)]=list(data.iloc[i,:])
-                                    Sgpa(new_df)                                
+                                    try:
+                                        Sgpa(new_df) 
+                                    except ZeroDivisionError:
+                                        wrong_file.grid(row=6,column=0,sticky='w',pady=6) 
+                                        return                             
                             else:
                                 if S.get()==2:
                                     reval_func(GPA_file,data)
@@ -374,7 +383,7 @@ def save():
     
 #Reset functionality
 def userGuide():
-    master.destroy()
+    user_guide()
 #Get result button
 Button(root,text="Get Result",command=save,font=('Times new Roman',16)).grid(row=21,column=2)
 #Reset button

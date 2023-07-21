@@ -17,12 +17,12 @@ def value(X):
           return 0
 
 def reval_func(GPA_file, data):
-    civil=read_excel(GPA_file,sheet_name=["Civil"])
-    civil=DataFrame(civil["Civil"])
+    civil=read_excel(GPA_file,sheet_name=["CE"])
+    civil=DataFrame(civil["CE"])
     eee=read_excel(GPA_file,sheet_name=["EEE"])
     eee=DataFrame(eee["EEE"])
-    mech=read_excel(GPA_file,sheet_name=["Mechanical"])
-    mech=DataFrame(mech["Mechanical"])
+    mech=read_excel(GPA_file,sheet_name=["ME"])
+    mech=DataFrame(mech["ME"])
     ece=read_excel(GPA_file,sheet_name=["ECE"])
     ece=DataFrame(ece["ECE"])
     cse=read_excel(GPA_file,sheet_name=["CSE"])
@@ -69,9 +69,9 @@ def reval_func(GPA_file, data):
             if data.iloc[i,-2] !="No Change":
                 change_data(cse)
     with ExcelWriter(GPA_file,engine='openpyxl',mode='w') as output:
-        civil.to_excel(output,sheet_name="Civil",index=False)
+        civil.to_excel(output,sheet_name="CE",index=False)
         eee.to_excel(output,sheet_name="EEE",index=False)
-        mech.to_excel(output,sheet_name="Mechanical",index=False)
+        mech.to_excel(output,sheet_name="ME",index=False)
         ece.to_excel(output,sheet_name="ECE",index=False)
         cse.to_excel(output,sheet_name="CSE",index=False)
     get_statistics(GPA_file)

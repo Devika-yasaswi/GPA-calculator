@@ -36,12 +36,12 @@ def Sgpa(data):
 
     #Calculating credits
     for i in range(len(data)):
-        x=int(data['Htno'][i][7:10])
-        if data['Subcode'][i] not in sub:
-            sub.append(data['Subcode'][i])
-            total+=float(data['Credits'][i])
-            student_data.append(data['Grade'][i])
-        if data['Htno'][i] not in student_data:
+        x=int(data.iloc[i,0][7:10])
+        if data.iloc[i,1] not in sub:
+            sub.append(data.iloc[i,1])
+            total+=float(data.iloc[i,-1])
+            student_data.append(data.iloc[i,-2])
+        if data.iloc[i,0] not in student_data:
             if x//100==1:
                 if "MP" not in student_data and 'F' not in student_data and "AB" not in student_data:
                      civil_credits=total
@@ -61,18 +61,18 @@ def Sgpa(data):
             #print(x," ",civil_credits," ",eee_credits," ",mech_credits," ",ece_credits," ",cse_credits)
             sub=[]
             total=0
-            student_data=[data['Htno'][i]]        
+            student_data=[data.iloc[i,0]]        
     #print(civil_credits," ",eee_credits," ",mech_credits," ",ece_credits," ",cse_credits)
     student_data=[]
     #calculating and writing GPA to output file
     with pd.ExcelWriter(file.name,engine='openpyxl',mode='w') as output:    
         for i in range(len(data)):        
-            #print(i,data['Htno'][i])
-            d=str(data['Htno'][i])
+            #print(i,data.iloc[i,0])
+            d=str(data.iloc[i,0])
             x=int(d[7:10])
                     
             #Entering the list of students values stored in the dataframe into the marks excel sheet
-            if data['Htno'][i] not in student_data:
+            if data.iloc[i,0] not in student_data:
                 def enter():  
                     global a,roll_no,GPA,GBM
                     if 'Points' not in df.columns:
@@ -109,7 +109,7 @@ def Sgpa(data):
                     GBM=0
                 if i>0:
                     enter()
-                student_data.append(data['Htno'][i])
+                student_data.append(data.iloc[i,0])
             
             #Entering the excel sheets based on the branch (sheet1=Civil,sheet2=Mechanical,sheet3=EEE,sheet4=ECE,sheet5=CSE)
             if int(d[7])>(a/100) or int(d[0:4])>start:
@@ -166,10 +166,10 @@ def Sgpa(data):
                 sub=[]
         
         #Adding subject name columns in the dataframe based on the subject code
-            if data['Subcode'][i] not in sub:            
+            if data.iloc[i,1] not in sub:            
                 try:                    
-                    df[data['Subname'][i]+' ('+data['Subcode'][i]+')']=[]
-                    sub.append(data['Subcode'][i])
+                    df[data['Subname'][i]+' ('+data.iloc[i,1]+')']=[]
+                    sub.append(data.iloc[i,1])
                 except:
                     continue
 
@@ -183,42 +183,42 @@ def Sgpa(data):
             #40-59  E grade
             #<40 Fail
             #AB Absent
-            if data['Grade'][i]=='A+':
+            if data.iloc[i,-2]=='A+':
                     grade=10
                     GBM+=grade*10
-                    GPA+=grade*data['Credits'][i]
-                    student_data.append(data['Grade'][i])
-            elif data['Grade'][i]=='A':
+                    GPA+=grade*data.iloc[i,-1]
+                    student_data.append(data.iloc[i,-2])
+            elif data.iloc[i,-2]=='A':
                     grade=9
                     GBM+=grade*10
-                    GPA+=grade*data['Credits'][i]
-                    student_data.append(data['Grade'][i])
-            elif data['Grade'][i]=='B':
+                    GPA+=grade*data.iloc[i,-1]
+                    student_data.append(data.iloc[i,-2])
+            elif data.iloc[i,-2]=='B':
                     grade=8
                     GBM+=grade*10
-                    GPA+=grade*data['Credits'][i]
-                    student_data.append(data['Grade'][i])
-            elif data['Grade'][i]=='C':
+                    GPA+=grade*data.iloc[i,-1]
+                    student_data.append(data.iloc[i,-2])
+            elif data.iloc[i,-2]=='C':
                     grade=7
                     GBM+=grade*10
-                    GPA+=grade*data['Credits'][i]
-                    student_data.append(data['Grade'][i])
-            elif data['Grade'][i]=='D':
+                    GPA+=grade*data.iloc[i,-1]
+                    student_data.append(data.iloc[i,-2])
+            elif data.iloc[i,-2]=='D':
                     grade=6
                     GBM+=grade*10
-                    GPA+=grade*data['Credits'][i]
-                    student_data.append(data['Grade'][i])
-            elif data['Grade'][i]=='E':
+                    GPA+=grade*data.iloc[i,-1]
+                    student_data.append(data.iloc[i,-2])
+            elif data.iloc[i,-2]=='E':
                     grade=5
                     GBM+=grade*10
-                    GPA+=grade*data['Credits'][i]
-                    student_data.append(data['Grade'][i])
-            elif data['Grade'][i]=='F':             
-                    student_data.append(data['Grade'][i])
-            elif data['Grade'][i]=='AB' or data['Grade'][i]=='ABSENT' or data['Grade'][i]=="MP":
-                    student_data.append(data['Grade'][i])
-            elif data['Grade'][i]=='COMPLETED' or data['Grade'][i]=='COMPLE':
-                    student_data.append(data['Grade'][i])
+                    GPA+=grade*data.iloc[i,-1]
+                    student_data.append(data.iloc[i,-2])
+            elif data.iloc[i,-2]=='F':             
+                    student_data.append(data.iloc[i,-2])
+            elif data.iloc[i,-2]=='AB' or data.iloc[i,-2]=='ABSENT' or data.iloc[i,-2]=="MP":
+                    student_data.append(data.iloc[i,-2])
+            elif data.iloc[i,-2]=='COMPLETED' or data.iloc[i,-2]=='COMPLE':
+                    student_data.append(data.iloc[i,-2])
                 
         #Adding final sheet CSE to the Excel
         enter()
