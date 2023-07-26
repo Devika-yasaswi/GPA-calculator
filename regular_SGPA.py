@@ -81,8 +81,8 @@ def Sgpa(data):
                         df['Status']=[]
                         df['Backlogs']=[]
                         df['Pass Percentage']=[]
-                        df['SGPA']=[]
                         df['Points']=[]
+                        df['SGPA']=[]
                         
                     student_data.append(GBM)    
                     

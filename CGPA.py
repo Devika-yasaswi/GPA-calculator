@@ -16,8 +16,8 @@ def CGPA_cal(sem_selection,sem_file_list):
     cse_final_df=DataFrame()
     
     def final_df_cal(final_df,df,i):
-        df=df[["Roll_No","SGPA","Total Credits","Backlogs"]]
-        df=df.rename(columns={"Total Credits":"Total Credits_sem"+str(i+1),"SGPA":"SGPA_sem"+str(i+1)})
+        df=df[["Roll_No","Points","Total Credits","SGPA","Backlogs"]]
+        df=df.rename(columns={"Total Credits":"Total Credits sem"+str(i+1),"Points":"Points sem"+str(i+1),"SGPA":"SGPA sem"+str(i+1)})
         if len(final_df.columns)==0:
             final_df=df
         else:
@@ -41,21 +41,21 @@ def CGPA_cal(sem_selection,sem_file_list):
     def CGPA_calculations(df):   
         df["CGPA"]=0
         df["Total backlogs"]=0
-        x=len(df.columns)//3-1
+        x=len(df.columns)//4-1
         value=0
         gpa=0
         backlogs=0
         for i in range(len(df)):
             for j in range(x):
-                gpa+=(df.iloc[i,1+3*j])
-                value+=(df.iloc[i,2+(3*j)])
-                backlogs+=df.iloc[i,3+3*j]
+                gpa+=(df.iloc[i,1+4*j])
+                value+=(df.iloc[i,2+(4*j)])
+                backlogs+=df.iloc[i,4+(4*j)]
             df.loc[i,"CGPA"]=gpa/value
             df.loc[i,"Total backlogs"]=backlogs
             value=0
             gpa=0
             backlogs=0
-        df=df.drop(df.columns[3::3],axis=1)
+        df=df.drop(df.columns[4::4],axis=1)
         return df    
     civil_final_df=CGPA_calculations(civil_final_df)
     eee_final_df=CGPA_calculations(eee_final_df)

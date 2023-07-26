@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.filedialog import *
+from PIL import ImageTk
 import PIL
 from pyautogui import alert
 import pymsgbox
@@ -17,7 +18,7 @@ master.title("CGPA/SGPA Calculator")
 img=PhotoImage(file="Background.png")
 logo=PIL.Image.open("JNTUK logo.png")
 new_logo=logo.resize((100,100))
-new_logo=PIL.ImageTk.PhotoImage(new_logo)
+new_logo=ImageTk.PhotoImage(new_logo)
 my_canvas=Canvas(master,width=1000,height=1000)
 my_canvas.pack(fill='both',expand=True)
 my_canvas.create_image(0,0,image=img,anchor="nw")
@@ -375,7 +376,10 @@ def save():
             if x==0:
                 status2=CGPA_cal(sem_selection,sem_file_list)
                 if status2==0:                  
-                    master.destroy()
+                    pymsgbox.rootWindowPosition="+700+350"
+                    result=alert(text="Result file generation is completed",title="Status",button="Ok")                            
+                    if result=="Ok":
+                        master.destroy()
                 else:
                     Label(root,text='Sem'+str(status2)+" file is in incorrect format",font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
     else:

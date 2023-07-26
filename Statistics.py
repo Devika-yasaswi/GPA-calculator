@@ -1,6 +1,5 @@
 from pandas import *
 from tkinter.filedialog import *
-from openpyxl import load_workbook
 def branch_calculation(data):
     df=DataFrame(columns=["subject","No.of students registered","No.of students appeared","Absentees","Pass Percentage"])
     for i in list(data.columns)[1:-7]:
@@ -25,15 +24,15 @@ def branch_calculation(data):
     df1=DataFrame(columns=["Total no.of students","No.of students appeared","Pass percentage"])
     new=[len(data),len(data)-count,(len(data)-count-count1)/(len(data)-count)*100]
     df1.loc[len(df1.index)]=new
-    data=data.sort_values(by=["SGPA"])
-    df2=DataFrame(columns=["Place","Roll No","Points"])
+    data=data.sort_values(by=["Points"])
+    df2=DataFrame(columns=["Place","Roll No","Points","SGPA"])
     x=1
     temp=data.iloc[-1,-1]
     for i in range(1,len(data)):
         if x<3 or temp==data.iloc[-i,-1]:
             if temp!=data.iloc[-i,-1]:
                 x+=1
-            new=[x,data.iloc[-i,0],data.iloc[-i,-1]]
+            new=[x,data.iloc[-i,0],data.iloc[-i,-2],data.iloc[-i,-1]]
             temp=data.iloc[-i,-1]
             df2.loc[len(df2.index)]=new     
         elif x==3:
