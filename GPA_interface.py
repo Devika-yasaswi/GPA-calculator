@@ -304,12 +304,11 @@ def save():
                         if S.get()==2 and GPA_file=='':
                             upload_regular_gpa.grid(row=20,column=0,sticky='w')
                         else:                    
-                            if S.get()==1:
-                                
+                            if S.get()==1:                                
                                     rno_list=[]
                                     for i in range(len(data)):
-                                            x=int(data['Htno'][i][7:10])
-                                            rno_list.append(data['Htno'][i][0:6])
+                                        x=int(data['Htno'][i][7:10])
+                                        rno_list.append(data['Htno'][i][0:6])
                                     new_rno_list=list(set(rno_list))
                                     new=[]
                                     for i in new_rno_list:
@@ -321,13 +320,13 @@ def save():
                                         if data.iloc[i,0][0:6]== series or data.iloc[i,0][0:6]==series1:
                                             new_df.loc[len(new_df.index)]=list(data.iloc[i,:])
                                     try:
-                                        Sgpa(new_df) 
+                                        Sgpa(new_df,input_file) 
                                     except ZeroDivisionError:
                                         wrong_file.grid(row=6,column=0,sticky='w',pady=6) 
                                         return                             
                             else:
                                 if S.get()==2:
-                                    reval_func(GPA_file,data)
+                                    reval_func(GPA_file,data,input_file)
                             pymsgbox.rootWindowPosition="+700+350"
                             result=alert(text="Result file generation is completed",title="Status",button="Ok")                            
                             if result=="Ok":

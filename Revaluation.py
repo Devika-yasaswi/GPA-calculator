@@ -16,7 +16,8 @@ def value(X):
      elif X=="F" or X=="AB" or X=="ABSENT" or X=="MP":
           return 0
 
-def reval_func(GPA_file, data):
+def reval_func(GPA_file, data,input):
+    status=0
     civil=read_excel(GPA_file,sheet_name=["CE"])
     civil=DataFrame(civil["CE"])
     eee=read_excel(GPA_file,sheet_name=["EEE"])
@@ -27,6 +28,8 @@ def reval_func(GPA_file, data):
     ece=DataFrame(ece["ECE"])
     cse=read_excel(GPA_file,sheet_name=["CSE"])
     cse=DataFrame(cse["CSE"])
+    data_files=read_excel(GPA_file,sheet_name=["Updated files"])
+    data_files=DataFrame(data_files["Updated files"])
     def change_data(df):
         for j in range(len(df)):
             if df.iloc[j,0] == data.iloc[i,0]:
@@ -68,6 +71,12 @@ def reval_func(GPA_file, data):
         if x//100==5:
             if data.iloc[i,-2] !="No Change":
                 change_data(cse)
+    for i in range(len(data_files)):
+        if data_files.iloc[i,0] == input:
+            status=1
+            break
+    if status==0:
+        data_files.loc[len(data_files)]=[input]
     with ExcelWriter(GPA_file,engine='openpyxl',mode='w') as output:
         civil.to_excel(output,sheet_name="CE",index=False)
         eee.to_excel(output,sheet_name="EEE",index=False)
@@ -75,3 +84,5 @@ def reval_func(GPA_file, data):
         ece.to_excel(output,sheet_name="ECE",index=False)
         cse.to_excel(output,sheet_name="CSE",index=False)
     get_statistics(GPA_file)
+    with ExcelWriter(GPA_file,engine="openpyxl",mode='a') as output:
+        data_files.to_excel(output,sheet_name="Updated files",index=False)

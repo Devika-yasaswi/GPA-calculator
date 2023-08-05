@@ -1,7 +1,7 @@
 import pandas as pd
 from tkinter.filedialog import *
 from Statistics import get_statistics
-def Sgpa(data):
+def Sgpa(data,input):
     #Initializations
     global GPA,a,roll_no,student_data,start,start_x,df,civil_credits,eee_credits,mech_credits,ece_credits,cse_credits,GBM
     roll_no=0    #Variable for collectig last three digis of the RollNo
@@ -20,6 +20,7 @@ def Sgpa(data):
     ece_credits=0
     cse_credits=0
     GBM=0
+    df1=pd.DataFrame({"Files updated ":[input]})
 
     #Deleting data frame for the creation of new branch dataframe with same name
     def delete():
@@ -226,4 +227,6 @@ def Sgpa(data):
             df.to_excel(output,sheet_name="CSE",index=False,startrow=cse,header=None)
         else:
             df.to_excel(output,sheet_name="CSE",index=False,startrow=cse)
-    get_statistics(file.name)
+        df.to_excel(output,sheet_name="CSE stats",index=False,startrow=cse,header=None)
+        df1.to_excel(output,sheet_name="Updated files",index=False)
+    get_statistics(file.name)  

@@ -41,7 +41,7 @@ def CGPA_cal(sem_selection,sem_file_list):
     def CGPA_calculations(df):   
         df["CGPA"]=0
         df["Total backlogs"]=0
-        x=len(df.columns)//4-1
+        x=len(df.columns)//4
         value=0
         gpa=0
         backlogs=0
