@@ -10,13 +10,22 @@ from Revaluation import *
 from CGPA import *
 from Statistics import *
 from User_guide import *
+import os
+import sys
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 master=Tk()
 master.geometry("1250x900+300+0")
 master.configure(bg="#1E90FF")
 master.title("CGPA/SGPA Calculator")
-img=PhotoImage(file="Background.png")
-logo=PIL.Image.open("JNTUK logo.png")
+img=PhotoImage(file=resource_path("Background.png"))
+logo=PIL.Image.open(resource_path("JNTUK logo.png"))
 new_logo=logo.resize((100,100))
 new_logo=ImageTk.PhotoImage(new_logo)
 my_canvas=Canvas(master,width=1000,height=1000)

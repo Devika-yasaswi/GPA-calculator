@@ -42,9 +42,9 @@ def reval_func(GPA_file, data,input):
                             df.loc[j,k]= data.iloc[i,-2]   #Modifying the grade
                             df.iloc[j,-2]+=value(data.iloc[i,-2])*float(data.iloc[i,-1])    #Changing GPA
                             df.iloc[j,-7]+=value(df.loc[j,k])*10  #Changing GBM                  
-                            print(df.iloc[j,-1])
+                            #print(df.iloc[j,-1])
                             df.iloc[j,-1]=df.iloc[j,-2]/df.iloc[j,-6]   #Modifying Points
-                            print(df.iloc[j,-1])
+                            #print(df.iloc[j,-1])
                             l=[]
                             for x in range(1,len(df.columns)-7):
                                 l.append(df.iloc[j,x])   #Taking note of all grades

@@ -1,6 +1,15 @@
 import pandas as pd
 from tkinter.filedialog import *
 from Statistics import get_statistics
+import sys
+import os
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 def Sgpa(data,input):
     #Initializations
     global GPA,a,roll_no,student_data,start,start_x,df,civil_credits,eee_credits,mech_credits,ece_credits,cse_credits,GBM
@@ -66,7 +75,7 @@ def Sgpa(data,input):
     #print(civil_credits," ",eee_credits," ",mech_credits," ",ece_credits," ",cse_credits)
     student_data=[]
     #calculating and writing GPA to output file
-    with pd.ExcelWriter(file.name,engine='openpyxl',mode='w') as output:    
+    with pd.ExcelWriter(resource_path(file.name),engine='openpyxl',mode='w') as output:    
         for i in range(len(data)):        
             #print(i,data.iloc[i,0])
             d=str(data.iloc[i,0])
