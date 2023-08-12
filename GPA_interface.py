@@ -347,7 +347,13 @@ def save():
                             data=pd.concat([data,df[i]],ignore_index=True)
                         try:
                             if data[list(data.columns)[-1]].isnull().values.any():
-                                status1=1                                                                
+                                status1=1                                      
+                                file_error.grid(row=20,column=0,sticky='w')    
+                                file_error_continue.grid(row=20,column=2,sticky='w') 
+                                upload.grid_forget()
+                                upload_button.grid_forget()
+                                new_upload.grid(row=5,column=0,sticky='w',pady=6)
+                                new_upload_button.grid(row=5,column=2,sticky='w')                           
                         except: 
                             status1=1
                             file_error.grid(row=20,column=0,sticky='w')    
