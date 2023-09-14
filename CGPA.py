@@ -16,12 +16,12 @@ def CGPA_cal(sem_selection,sem_file_list):
     cse_final_df=DataFrame()
     
     def final_df_cal(final_df,df,i):
-        df=df[["Roll_No","Points","Total Credits","SGPA","Backlogs"]]
+        df=df[["Roll No","Points","Total Credits","SGPA","Backlogs"]]
         df=df.rename(columns={"Total Credits":"Total Credits sem"+str(i+1),"Points":"Points sem"+str(i+1),"SGPA":"SGPA sem"+str(i+1)})
         if len(final_df.columns)==0:
             final_df=df
         else:
-            final_df=merge(final_df,df,"outer",on="Roll_No")
+            final_df=merge(final_df,df,"outer",on="Roll No")
         final_df=final_df.fillna(0)
         return final_df
     for i in range(len(sem_selection)):
@@ -33,9 +33,9 @@ def CGPA_cal(sem_selection,sem_file_list):
                 mech_final_df=final_df_cal(mech_final_df,mech_df,i)
                 ece_final_df=final_df_cal(ece_final_df,ece_df,i)
                 cse_final_df=final_df_cal(cse_final_df,cse_df,i)
-            except:
+            except :
                 return i+1
-            if "Roll_No" not in civil_df.columns or "Total Credits" not in civil_df.columns or "SGPA" not in civil_df.columns or "Backlogs" not in civil_df.columns:
+            if "Roll No" not in civil_df.columns or "Total Credits" not in civil_df.columns or "SGPA" not in civil_df.columns or "Backlogs" not in civil_df.columns:
                 return i+1
                 
     def CGPA_calculations(df):   

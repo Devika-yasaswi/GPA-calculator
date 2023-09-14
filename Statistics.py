@@ -21,8 +21,8 @@ def branch_calculation(data):
             count+=1
         if len(new)!=1 and ("F" in new or "MP" in new or  "AB" in new or "ABSENT" in new or "MP" in new):
             count1+=1
-    df1=DataFrame(columns=["Total no.of students","No.of students appeared","Pass percentage"])
-    new=[len(data),len(data)-count,(len(data)-count-count1)/(len(data)-count)*100]
+    df1=DataFrame(columns=["subject","No.of students registered","No.of students appeared","Absentees","Pass Percentage"])
+    new=["Total",len(data),len(data)-count,count,(len(data)-count-count1)/(len(data)-count)*100]
     df1.loc[len(df1.index)]=new
     data=data.sort_values(by=["Points"])
     df2=DataFrame(columns=["Place","Roll No","Points","SGPA"])
@@ -37,8 +37,8 @@ def branch_calculation(data):
             df2.loc[len(df2.index)]=new     
         elif x==3:
             break
-    df=concat([df,df1,df2],axis=1)
-    return df
+    df=concat([df,df1],axis=0)
+    return df,df2
     
 
 def get_statistics(file):
@@ -52,14 +52,19 @@ def get_statistics(file):
     ece_data=ece_data["ECE"]
     cse_data=read_excel(file,sheet_name=["CSE"])
     cse_data=cse_data["CSE"]
-    civil_data=branch_calculation(civil_data)
-    eee_data=branch_calculation(eee_data)
-    mech_data=branch_calculation(mech_data)
-    ece_data=branch_calculation(ece_data)
-    cse_data=branch_calculation(cse_data)
-    with ExcelWriter(file,engine='openpyxl',mode='a',if_sheet_exists="replace") as output:
+    civil_data,civil_top=branch_calculation(civil_data)
+    eee_data,eee_top=branch_calculation(eee_data)
+    mech_data,mech_top=branch_calculation(mech_data)
+    ece_data,ece_top=branch_calculation(ece_data)
+    cse_data,cse_top=branch_calculation(cse_data)
+    with ExcelWriter(file,engine='openpyxl',mode='a',if_sheet_exists="overlay") as output:
         civil_data.to_excel(output,sheet_name="CE stats",index=False)
+        civil_top.to_excel(output,sheet_name="CE stats",index=False,startcol=7)
         eee_data.to_excel(output,sheet_name="EEE stats",index=False)
+        eee_top.to_excel(output,sheet_name="EEE stats",index=False,startcol=7)
         mech_data.to_excel(output,sheet_name="ME stats",index=False)
+        mech_top.to_excel(output,sheet_name="ME stats",index=False,startcol=7)
         ece_data.to_excel(output,sheet_name="ECE stats",index=False)
+        ece_top.to_excel(output,sheet_name="ECE stats",index=False,startcol=7)
         cse_data.to_excel(output,sheet_name="CSE stats",index=False)
+        cse_top.to_excel(output,sheet_name="CSE stats",index=False,startcol=7)

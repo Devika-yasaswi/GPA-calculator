@@ -159,6 +159,13 @@ sem7_button=Button(root,text="Upload file",command=sem7_file_function)
 sem8_label=Label(root,text="Sem8 SGPA file",font=Entry_font,bg="#FFE9E3")
 sem8_button=Button(root,text="Upload file",command=sem8_file_function)
 
+#Result Analysis
+options=["Overall Analysis", "Civil Analysis", "EEE Analysis", "Mechanical Analysis", "ECE Analysis", "CSE Analysis"]
+clicked=StringVar()
+clicked.set("Select")
+analysis=OptionMenu(root,clicked,*options)
+analysis_type=Label(root,text="Analysis Type",font=Label_font,bg="#FFE9E3")
+
 #sem files uploading labels and buttons
 sem_label_list=[sem1_label,sem2_label,sem3_label,sem4_label,sem5_label,sem6_label,sem7_label,sem8_label]
 sem_button_list=[sem1_button,sem2_button,sem3_button,sem4_button,sem5_button,sem6_button,sem7_button,sem8_button]
@@ -176,6 +183,11 @@ S=IntVar()
 def sem_type():
     global reval,reval_button,upload,upload_button
     if S.get()==2:
+        try:
+            analysis.grid_forget()
+            analysis_type.grid_forget()
+        except:
+            pass
         reval=Label(root,text="Upload the regular GPA excel",bg="#FFE9E3",font=Entry_font)
         reval.grid(row=6,column=0,sticky='w')
         reval_button=Button(root, text='Upload File', width=20,command = GPA_file_func)
@@ -185,7 +197,9 @@ def sem_type():
             reval.grid_forget()
             reval_button.grid_forget()
         except:
-            pass
+            pass             
+        #analysis.grid(row=20,column=2,sticky='w')
+        #analysis_type.grid(row=20,column=0,sticky='w')
     if S.get()==1 or S.get()==2:
         try:
             upload.grid_forget()
@@ -251,6 +265,11 @@ def Cal_type():
             reval_button.grid_forget()                               
         except:
             pass
+        try:
+            analysis.grid_forget()
+            analysis_type.grid_forget()
+        except:
+            pass
 
 #Calculation type SGPA=1, CGPA=2
 Label(root,text="Calculation Mode",font=Label_font,bg="#FFE9E3").grid(row=0,column=0,sticky='w')
@@ -307,11 +326,11 @@ def save():
             if S.get()==1 or S.get()==2:              
                 #checks input GPA file
                 if input_file=='' and status1==0: 
-                    upload_result_label.grid(row=20,column=0,sticky='w') 
+                    upload_result_label.grid(row=21,column=0,sticky='w') 
                 else: 
                     def calculation(data):
                         if S.get()==2 and GPA_file=='':
-                            upload_regular_gpa.grid(row=20,column=0,sticky='w')
+                            upload_regular_gpa.grid(row=21,column=0,sticky='w')
                         else:                    
                             if S.get()==1:                                
                                     rno_list=[]
@@ -330,8 +349,8 @@ def save():
                                             new_df.loc[len(new_df.index)]=list(data.iloc[i,:])
                                     try:
                                         Sgpa(new_df,input_file) 
-                                    except ZeroDivisionError:
-                                        wrong_file.grid(row=6,column=0,sticky='w',pady=6) 
+                                    except:
+                                        wrong_file.grid(row=6,column=0,sticky='w',pady=6)
                                         return                             
                             else:
                                 if S.get()==2:
@@ -348,16 +367,16 @@ def save():
                         try:
                             if data[list(data.columns)[-1]].isnull().values.any():
                                 status1=1                                      
-                                file_error.grid(row=20,column=0,sticky='w')    
-                                file_error_continue.grid(row=20,column=2,sticky='w') 
+                                file_error.grid(row=21,column=0,sticky='w')    
+                                file_error_continue.grid(row=21,column=2,sticky='w') 
                                 upload.grid_forget()
                                 upload_button.grid_forget()
                                 new_upload.grid(row=5,column=0,sticky='w',pady=6)
                                 new_upload_button.grid(row=5,column=2,sticky='w')                           
                         except: 
                             status1=1
-                            file_error.grid(row=20,column=0,sticky='w')    
-                            file_error_continue.grid(row=20,column=2,sticky='w') 
+                            file_error.grid(row=21,column=0,sticky='w')    
+                            file_error_continue.grid(row=21,column=2,sticky='w') 
                             upload.grid_forget()
                             upload_button.grid_forget()
                             new_upload.grid(row=5,column=0,sticky='w',pady=6)
@@ -367,16 +386,16 @@ def save():
                             calculation(data)
                     if status1==1:
                         if input_file_excel =="":
-                            upload_regular_gpa.grid(row=20,column=0,sticky='w')
+                            upload_regular_gpa.grid(row=21,column=0,sticky='w')
                         else:
-                            data=read_excel(input_file_excel)
+                            data=read_excel(input_file_excel,engine="openpyxl")
                             if "Htno" not in data.columns:
-                                wrong_upload.grid(row=20,column=0,sticky='w')
+                                wrong_upload.grid(row=21,column=0,sticky='w')
                             else:
                                 calculation(data)
                                     
             else:
-                sem_type_select.grid(row=20,column=0,sticky='w')
+                sem_type_select.grid(row=21,column=0,sticky='w')
         elif C.get()==2:
             sem_selection=[sem1.get(),sem2.get(),sem3.get(),sem4.get(),sem5.get(),sem6.get(),sem7.get(),sem8.get()]
             sem_file_list=[sem1_file,sem2_file,sem3_file,sem4_file,sem5_file,sem6_file,sem7_file,sem8_file]
@@ -384,7 +403,7 @@ def save():
             for i in range(len(sem_selection)):
                 if sem_selection[i]==1:
                     if sem_file_list[i]=="":
-                        Label(root,text='Please Upload Sem'+str(i+1)+" file          ",font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
+                        Label(root,text='Please Upload Sem'+str(i+1)+" file          ",font=Entry_font,fg='red',bg="#FFE9E3").grid(row=21,column=0,sticky='w')
                         x=1
                         break
             if x==0:
@@ -395,15 +414,15 @@ def save():
                     if result=="Ok":
                         master.destroy()
                 else:
-                    Label(root,text='Sem'+str(status2)+" file is in incorrect format",font=Entry_font,fg='red',bg="#FFE9E3").grid(row=20,column=0,sticky='w')
+                    Label(root,text='Sem'+str(status2)+" file is in incorrect format",font=Entry_font,fg='red',bg="#FFE9E3").grid(row=21,column=0,sticky='w')
     else:
-        cal_type_select.grid(row=20,column=0,sticky='w')
+        cal_type_select.grid(row=21,column=0,sticky='w')
     
 #Reset functionality
 def userGuide():
     user_guide()
 #Get result button
-Button(root,text="Get Result",command=save,font=('Times new Roman',16)).grid(row=21,column=2)
+Button(root,text="Get Result",command=save,font=('Times new Roman',16)).grid(row=22,column=2)
 #Reset button
-Button(root,text="User Guide",command=userGuide,font=('Times new Roman',16)).grid(row=21,column=0)
+Button(root,text="User Guide",command=userGuide,font=('Times new Roman',16)).grid(row=22,column=0)
 master.mainloop()
