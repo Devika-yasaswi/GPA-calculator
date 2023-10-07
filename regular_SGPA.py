@@ -305,7 +305,7 @@ def Sgpa(data,input):
             df.to_excel(output,sheet_name="CSE",index=False,startrow=cse,header=None)
         else:
             df.to_excel(output,sheet_name="CSE",index=False,startrow=cse)
-        #df.to_excel(output,sheet_name="CSE stats",index=False,startrow=cse,header=None)
-        df1.to_excel(output,sheet_name="Updated files",index=False)
-    get_statistics(file.name)  
+    get_statistics(file.name)
+    with pd.ExcelWriter(resource_path(file.name),engine='openpyxl',mode='a') as output:
+        df1.to_excel(output,sheet_name="Updated files",index=False)  
     return file.name

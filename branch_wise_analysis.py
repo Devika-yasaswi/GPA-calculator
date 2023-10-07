@@ -3,15 +3,16 @@ import matplotlib.pyplot as plt
 from openpyxl import load_workbook,drawing,styles
 from openpyxl.styles import Alignment
 import os
-def branchwise_analysis(file,branch):
+def delete_branch (file,branch):
     wb = load_workbook(file)
     sheets=wb.get_sheet_names()
     for i in sheets:
         if branch not in i:
-            if i=="Updated files":
-                continue
-            wb.remove(wb[i])
+            if i!="Updated files":
+                wb.remove(wb[i])
     wb.save(file)
+
+def branchwise_analysis(file,branch):
     data=read_excel(file,sheet_name=[branch])
     data=DataFrame(data[branch])
     for i in list(data.columns)[1:-8]:
@@ -38,6 +39,7 @@ def branchwise_analysis(file,branch):
         strFile="./Piechart.png"
         plt.savefig(strFile)
         plt.clf()
+        plt.close()
         df1=DataFrame(columns=['Grades','No.of Students'])
         for k in range(len(new)):
             df1.loc[len(df1.index)]=[my_labels[k],new[k]]
@@ -52,4 +54,3 @@ def branchwise_analysis(file,branch):
         writer.save()
         if os.path.isfile(strFile):
             os.remove(strFile)
-        plt.show()

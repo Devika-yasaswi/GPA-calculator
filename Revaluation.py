@@ -20,6 +20,7 @@ def value(X):
 
 def reval_func(GPA_file, data,input):
     status=0
+    flag=1
     try:
         civil=read_excel(GPA_file,sheet_name=["Civil"])
         civil=DataFrame(civil["Civil"])
@@ -136,12 +137,15 @@ def reval_func(GPA_file, data,input):
             cse.to_excel(output,sheet_name="CSE",index=False)
         except:
             pass
-    wb=load_workbook(GPA_file)
-    if wb.sheetnames!=["Civil","EEE","Mechanical","ECE","CSE","Civil stats","EEE stats","Mechanical stats","ECE stats","CSE stats","Updated files"]:
-        branch=wb.sheetnames[0]
-        branchwise_analysis(GPA_file,branch)
-    wb.save(GPA_file)
     get_statistics(GPA_file)
+    wb=load_workbook(GPA_file)
+    if "Civil" not in wb.get_sheet_names() or "EEE" not in wb.get_sheet_names() or "Mechanical" not in wb.get_sheet_names() or "ECE" not in wb.get_sheet_names() or "CSE" not in wb.get_sheet_names() or "Civil stats" not in wb.get_sheet_names() or "EEE stats" not in wb.get_sheet_names() or "Mechanical stats" not in wb.get_sheet_names() or "ECE stats" not in wb.get_sheet_names() or "CSE stats" not in wb.get_sheet_names() or "Updated files" not in wb.get_sheet_names():
+        branch=wb.sheetnames[0]
+        flag=0
+    wb.save(GPA_file)
+    if flag==0:
+        branchwise_analysis(GPA_file,branch)
+    
     try:
         with ExcelWriter(GPA_file,engine="openpyxl",mode='a') as output:
             data_files.to_excel(output,sheet_name="Updated files",index=False)

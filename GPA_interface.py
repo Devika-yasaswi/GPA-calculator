@@ -289,6 +289,7 @@ new_upload_button=Button(root, text='Upload File', width=20,command = input_mark
 wrong_upload=Label(root,text='The uploaded excel format is not suitable.',font=Entry_font,fg='red',bg="#FFE9E3")
 wrong_file=Label(root,text='The uploaded file is wrong! Try again.',font=Entry_font,fg='red',bg="#FFE9E3")
 analysis_selction=Label(root,text="Please select analysis type",font=Entry_font,fg='red',bg="#FFE9E3")
+close_file=Label(root,text="Please close the file before modifying it",font=Entry_font,fg='red',bg="#FFE9E3")
 #saving functionality
 def save():
     global data,status1,civil_credits,mech_credits,eee_credits,ece_credits,cse_credits,input_file,GPA_file,sem1_file,sem2_file,sem3_file,sem4_file,sem5_file,sem6_file,sem7_file,sem8_file   
@@ -323,6 +324,10 @@ def save():
         pass
     try:
         analysis_selction.grid_forget()
+    except:
+        pass
+    try:
+        close_file.grid_forget()
     except:
         pass
     #checks calculation type selection
@@ -360,16 +365,24 @@ def save():
                                     try:
                                         file_name=Sgpa(new_df,input_file) 
                                         if clicked.get()=="Civil Analysis":
+                                            delete_branch(file_name,"Civil")
                                             branchwise_analysis(file_name,"Civil")
                                         elif clicked.get()=="EEE Analysis":
+                                            delete_branch(file_name,"EEE")
                                             branchwise_analysis(file_name,"EEE")
                                         elif clicked.get()=="Mechanical Analysis":
+                                            delete_branch(file_name,"Mechanical")
                                             branchwise_analysis(file_name,"Mechanical")
                                         elif clicked.get()=="ECE Analysis":
+                                            delete_branch(file_name,"ECE")
                                             branchwise_analysis(file_name,"ECE")
                                         elif clicked.get()=="CSE Analysis":
+                                            delete_branch(file_name,"CSE")
                                             branchwise_analysis(file_name,"CSE")
-                                    except ZeroDivisionError:
+                                    except PermissionError:
+                                        close_file.grid(row=6,column=0,sticky='w',pady=6)
+                                        return
+                                    except:
                                         wrong_file.grid(row=6,column=0,sticky='w',pady=6)
                                         return                             
                             else:
