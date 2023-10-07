@@ -1,5 +1,7 @@
 from pandas import *
 from Statistics import get_statistics
+from openpyxl import load_workbook
+from branch_wise_analysis import *
 def value(X):
      if X=="A+":
           return 10
@@ -18,18 +20,36 @@ def value(X):
 
 def reval_func(GPA_file, data,input):
     status=0
-    civil=read_excel(GPA_file,sheet_name=["CE"])
-    civil=DataFrame(civil["CE"])
-    eee=read_excel(GPA_file,sheet_name=["EEE"])
-    eee=DataFrame(eee["EEE"])
-    mech=read_excel(GPA_file,sheet_name=["ME"])
-    mech=DataFrame(mech["ME"])
-    ece=read_excel(GPA_file,sheet_name=["ECE"])
-    ece=DataFrame(ece["ECE"])
-    cse=read_excel(GPA_file,sheet_name=["CSE"])
-    cse=DataFrame(cse["CSE"])
-    data_files=read_excel(GPA_file,sheet_name=["Updated files"])
-    data_files=DataFrame(data_files["Updated files"])
+    try:
+        civil=read_excel(GPA_file,sheet_name=["Civil"])
+        civil=DataFrame(civil["Civil"])
+    except:
+        pass
+    try:
+        eee=read_excel(GPA_file,sheet_name=["EEE"])
+        eee=DataFrame(eee["EEE"])
+    except:
+        pass
+    try:
+        mech=read_excel(GPA_file,sheet_name=["Mechanical"])
+        mech=DataFrame(mech["Mechanical"])
+    except:
+        pass
+    try:
+        ece=read_excel(GPA_file,sheet_name=["ECE"])
+        ece=DataFrame(ece["ECE"])
+    except:
+        pass
+    try:
+        cse=read_excel(GPA_file,sheet_name=["CSE"])
+        cse=DataFrame(cse["CSE"])
+    except:
+        pass
+    try:
+        data_files=read_excel(GPA_file,sheet_name=["Updated files"])
+        data_files=DataFrame(data_files["Updated files"])
+    except:
+        pass
     def change_data(df):
         for j in range(len(df)):
             if df.iloc[j,0] == data.iloc[i,0]:
@@ -55,34 +75,75 @@ def reval_func(GPA_file, data,input):
         return df
 
     for i in range(len(data)):
-        x=int(data.iloc[i,0][7:10])    
-        if x//100==1:
-            if data.iloc[i,-2] !="No Change":
-                civil=change_data(civil)
-        if x//100==2:
-            if data.iloc[i,-2] !="No Change":
-                change_data(eee)
-        if x//100==3:
-            if data.iloc[i,-2] !="No Change":
-                change_data(mech)
-        if x//100==4:
-            if data.iloc[i,-2] !="No Change":
-                change_data(ece)
-        if x//100==5:
-            if data.iloc[i,-2] !="No Change":
-                change_data(cse)
-    for i in range(len(data_files)):
-        if data_files.iloc[i,0] == input:
-            status=1
-            break
-    if status==0:
-        data_files.loc[len(data_files)]=[input]
+        x=int(data.iloc[i,0][7:10])  
+        try:  
+            if x//100==1:
+                if data.iloc[i,-2] !="No Change":
+                    civil=change_data(civil)
+        except:
+            pass
+        try:
+            if x//100==2:
+                if data.iloc[i,-2] !="No Change":
+                    change_data(eee)
+        except:
+            pass
+        try:
+            if x//100==3:
+                if data.iloc[i,-2] !="No Change":
+                    change_data(mech)
+        except:
+            pass  
+        try:
+            if x//100==4:
+                if data.iloc[i,-2] !="No Change":
+                    change_data(ece)
+        except:
+            pass
+        try:
+            if x//100==5:
+                if data.iloc[i,-2] !="No Change":
+                    change_data(cse)
+        except:
+            pass
+    try:
+        for i in range(len(data_files)):
+            if data_files.iloc[i,0] == input:
+                status=1
+                break
+        if status==0:
+            data_files.loc[len(data_files)]=[input]
+    except:
+        pass
     with ExcelWriter(GPA_file,engine='openpyxl',mode='w') as output:
-        civil.to_excel(output,sheet_name="CE",index=False)
-        eee.to_excel(output,sheet_name="EEE",index=False)
-        mech.to_excel(output,sheet_name="ME",index=False)
-        ece.to_excel(output,sheet_name="ECE",index=False)
-        cse.to_excel(output,sheet_name="CSE",index=False)
+        try:
+            civil.to_excel(output,sheet_name="Civil",index=False)
+        except:
+            pass
+        try:
+            eee.to_excel(output,sheet_name="EEE",index=False)
+        except:
+            pass
+        try:
+            mech.to_excel(output,sheet_name="Mechanical",index=False)
+        except:
+            pass
+        try:
+            ece.to_excel(output,sheet_name="ECE",index=False)
+        except:
+            pass
+        try:
+            cse.to_excel(output,sheet_name="CSE",index=False)
+        except:
+            pass
+    wb=load_workbook(GPA_file)
+    if wb.sheetnames!=["Civil","EEE","Mechanical","ECE","CSE","Civil stats","EEE stats","Mechanical stats","ECE stats","CSE stats","Updated files"]:
+        branch=wb.sheetnames[0]
+        branchwise_analysis(GPA_file,branch)
+    wb.save(GPA_file)
     get_statistics(GPA_file)
-    with ExcelWriter(GPA_file,engine="openpyxl",mode='a') as output:
-        data_files.to_excel(output,sheet_name="Updated files",index=False)
+    try:
+        with ExcelWriter(GPA_file,engine="openpyxl",mode='a') as output:
+            data_files.to_excel(output,sheet_name="Updated files",index=False)
+    except:
+        pass

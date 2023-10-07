@@ -202,10 +202,10 @@ def Sgpa(data,input):
                     total_subs=civil_subs             
                 if int(d[7])==2:                                       
                     if start_x==2:
-                        df.to_excel(output,sheet_name="CE",index=False,startrow=civil,header=None)
+                        df.to_excel(output,sheet_name="Civil",index=False,startrow=civil,header=None)
                     else:
                         civil=len(df.index)+1
-                        df.to_excel(output,sheet_name="CE",index=False)
+                        df.to_excel(output,sheet_name="Civil",index=False)
                         #df.to_excel(output,sheet_name="CE stats",index=False)
                     total_credits=eee_credits
                     total_subs=eee_subs
@@ -223,10 +223,10 @@ def Sgpa(data,input):
                     df=delete(mech_subs)
                 if int(d[7])==4:
                     if start_x==2:
-                        df.to_excel(output,sheet_name="ME",index=False,startrow=mech,header=None)
+                        df.to_excel(output,sheet_name="Mechanical",index=False,startrow=mech,header=None)
                     else:
                         mech=len(df.index)+1
-                        df.to_excel(output,sheet_name='ME',index=False)
+                        df.to_excel(output,sheet_name="Mechanical",index=False)
                         #df.to_excel(output,sheet_name='ME stats',index=False)
                     total_credits=ece_credits
                     total_subs=ece_subs
@@ -308,3 +308,4 @@ def Sgpa(data,input):
         #df.to_excel(output,sheet_name="CSE stats",index=False,startrow=cse,header=None)
         df1.to_excel(output,sheet_name="Updated files",index=False)
     get_statistics(file.name)  
+    return file.name

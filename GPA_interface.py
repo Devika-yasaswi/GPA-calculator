@@ -10,6 +10,7 @@ from Revaluation import *
 from CGPA import *
 from Statistics import *
 from User_guide import *
+from branch_wise_analysis import *
 import os
 import sys
 def resource_path(relative_path):
@@ -198,8 +199,8 @@ def sem_type():
             reval_button.grid_forget()
         except:
             pass             
-        #analysis.grid(row=20,column=2,sticky='w')
-        #analysis_type.grid(row=20,column=0,sticky='w')
+        analysis.grid(row=20,column=2,sticky='w')
+        analysis_type.grid(row=20,column=0,sticky='w')
     if S.get()==1 or S.get()==2:
         try:
             upload.grid_forget()
@@ -287,6 +288,7 @@ new_upload=Label(root,text="Upload the result excel",bg="#FFE9E3",font=Entry_fon
 new_upload_button=Button(root, text='Upload File', width=20,command = input_marks_excel)
 wrong_upload=Label(root,text='The uploaded excel format is not suitable.',font=Entry_font,fg='red',bg="#FFE9E3")
 wrong_file=Label(root,text='The uploaded file is wrong! Try again.',font=Entry_font,fg='red',bg="#FFE9E3")
+analysis_selction=Label(root,text="Please select analysis type",font=Entry_font,fg='red',bg="#FFE9E3")
 #saving functionality
 def save():
     global data,status1,civil_credits,mech_credits,eee_credits,ece_credits,cse_credits,input_file,GPA_file,sem1_file,sem2_file,sem3_file,sem4_file,sem5_file,sem6_file,sem7_file,sem8_file   
@@ -319,6 +321,10 @@ def save():
         wrong_file.grid_forget()
     except:
         pass
+    try:
+        analysis_selction.grid_forget()
+    except:
+        pass
     #checks calculation type selection
     if C.get()==1 or C.get()==2:
         #checks semester type selection
@@ -328,10 +334,14 @@ def save():
                 if input_file=='' and status1==0: 
                     upload_result_label.grid(row=21,column=0,sticky='w') 
                 else: 
+                    if S.get()==1:
+                        if clicked.get()=="Select":
+                            analysis_selction.grid(row=21,column=0,sticky='w')
+                            return
                     def calculation(data):
                         if S.get()==2 and GPA_file=='':
                             upload_regular_gpa.grid(row=21,column=0,sticky='w')
-                        else:                    
+                        else:
                             if S.get()==1:                                
                                     rno_list=[]
                                     for i in range(len(data)):
@@ -348,17 +358,30 @@ def save():
                                         if data.iloc[i,0][0:6]== series or data.iloc[i,0][0:6]==series1:
                                             new_df.loc[len(new_df.index)]=list(data.iloc[i,:])
                                     try:
-                                        Sgpa(new_df,input_file) 
-                                    except:
+                                        file_name=Sgpa(new_df,input_file) 
+                                        if clicked.get()=="Civil Analysis":
+                                            branchwise_analysis(file_name,"Civil")
+                                        elif clicked.get()=="EEE Analysis":
+                                            branchwise_analysis(file_name,"EEE")
+                                        elif clicked.get()=="Mechanical Analysis":
+                                            branchwise_analysis(file_name,"Mechanical")
+                                        elif clicked.get()=="ECE Analysis":
+                                            branchwise_analysis(file_name,"ECE")
+                                        elif clicked.get()=="CSE Analysis":
+                                            branchwise_analysis(file_name,"CSE")
+                                    except ZeroDivisionError:
                                         wrong_file.grid(row=6,column=0,sticky='w',pady=6)
                                         return                             
                             else:
                                 if S.get()==2:
                                     reval_func(GPA_file,data,input_file)
                             pymsgbox.rootWindowPosition="+700+350"
-                            result=alert(text="Result file generation is completed",title="Status",button="Ok")                            
-                            if result=="Ok":
-                                master.destroy()   
+                            result=alert(text="Result file generation is completed",title="Status",button="Ok")
+                            try:                            
+                                if result=="Ok":
+                                    master.destroy()  
+                            except:
+                                pass
                     if status1==0:               
                         df=tabula.read_pdf(input_file,pages="all")
                         data=pd.DataFrame()

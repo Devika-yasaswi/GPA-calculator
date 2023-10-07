@@ -42,29 +42,74 @@ def branch_calculation(data):
     
 
 def get_statistics(file):
-    civil_data=read_excel(file,sheet_name=["CE"])
-    civil_data=DataFrame(civil_data["CE"])
-    eee_data=read_excel(file,sheet_name=["EEE"])
-    eee_data=eee_data["EEE"]
-    mech_data=read_excel(file,sheet_name=["ME"])
-    mech_data=mech_data["ME"]
-    ece_data=read_excel(file,sheet_name=["ECE"])
-    ece_data=ece_data["ECE"]
-    cse_data=read_excel(file,sheet_name=["CSE"])
-    cse_data=cse_data["CSE"]
-    civil_data,civil_top=branch_calculation(civil_data)
-    eee_data,eee_top=branch_calculation(eee_data)
-    mech_data,mech_top=branch_calculation(mech_data)
-    ece_data,ece_top=branch_calculation(ece_data)
-    cse_data,cse_top=branch_calculation(cse_data)
+    try:
+        civil_data=read_excel(file,sheet_name=["Civil"])
+        civil_data=DataFrame(civil_data["Civil"])
+    except:
+        pass
+    try:
+        eee_data=read_excel(file,sheet_name=["EEE"])
+        eee_data=eee_data["EEE"]
+    except:
+        pass
+    try:
+        mech_data=read_excel(file,sheet_name=["Mechanical"])
+        mech_data=mech_data["Mechanical"]
+    except:
+        pass
+    try:
+        ece_data=read_excel(file,sheet_name=["ECE"])
+        ece_data=ece_data["ECE"]
+    except:
+        pass
+    try:
+        cse_data=read_excel(file,sheet_name=["CSE"])
+        cse_data=cse_data["CSE"]
+    except:
+        pass
+    try:
+        civil_data,civil_top=branch_calculation(civil_data)
+    except:
+        pass
+    try:
+        eee_data,eee_top=branch_calculation(eee_data)
+    except:
+        pass
+    try:
+        mech_data,mech_top=branch_calculation(mech_data)
+    except:
+        pass
+    try:
+        ece_data,ece_top=branch_calculation(ece_data)
+    except:
+        pass
+    try:
+        cse_data,cse_top=branch_calculation(cse_data)
+    except:
+        pass
     with ExcelWriter(file,engine='openpyxl',mode='a',if_sheet_exists="overlay") as output:
-        civil_data.to_excel(output,sheet_name="CE stats",index=False)
-        civil_top.to_excel(output,sheet_name="CE stats",index=False,startcol=7)
-        eee_data.to_excel(output,sheet_name="EEE stats",index=False)
-        eee_top.to_excel(output,sheet_name="EEE stats",index=False,startcol=7)
-        mech_data.to_excel(output,sheet_name="ME stats",index=False)
-        mech_top.to_excel(output,sheet_name="ME stats",index=False,startcol=7)
-        ece_data.to_excel(output,sheet_name="ECE stats",index=False)
-        ece_top.to_excel(output,sheet_name="ECE stats",index=False,startcol=7)
-        cse_data.to_excel(output,sheet_name="CSE stats",index=False)
-        cse_top.to_excel(output,sheet_name="CSE stats",index=False,startcol=7)
+        try:
+            civil_data.to_excel(output,sheet_name="Civil stats",index=False)
+            civil_top.to_excel(output,sheet_name="Civil stats",index=False,startcol=7)
+        except:
+            pass
+        try:
+            eee_data.to_excel(output,sheet_name="EEE stats",index=False)
+            eee_top.to_excel(output,sheet_name="EEE stats",index=False,startcol=7)
+        except:
+            pass
+        try:
+            mech_data.to_excel(output,sheet_name="Mechanical stats",index=False)
+            mech_top.to_excel(output,sheet_name="Mechanical stats",index=False,startcol=7)
+        except:
+            pass
+        try:
+            ece_data.to_excel(output,sheet_name="ECE stats",index=False)
+            ece_top.to_excel(output,sheet_name="ECE stats",index=False,startcol=7)
+        except:
+            pass
+        try:
+            cse_data.to_excel(output,sheet_name="CSE stats",index=False)
+            cse_top.to_excel(output,sheet_name="CSE stats",index=False,startcol=7)
+        except:
+            pass

@@ -1,12 +1,12 @@
 from pandas import *
 from tkinter.filedialog import *
 def excel_to_dataframe(data):
-    civil=read_excel(data,sheet_name=["CE"])
+    civil=read_excel(data,sheet_name=["Civil"])
     eee=read_excel(data,sheet_name=["EEE"])
-    mech=read_excel(data,sheet_name=["ME"])
+    mech=read_excel(data,sheet_name=["Mechanical"])
     ece=read_excel(data,sheet_name=["ECE"])
     cse=read_excel(data,sheet_name=["CSE"])
-    return civil["CE"],eee["EEE"],mech["ME"],ece["ECE"],cse["CSE"]
+    return civil["Civil"],eee["EEE"],mech["Mechanical"],ece["ECE"],cse["CSE"]
 
 def CGPA_cal(sem_selection,sem_file_list):    
     civil_final_df=DataFrame()
@@ -65,9 +65,24 @@ def CGPA_cal(sem_selection,sem_file_list):
     files=[('xlsx files','*.xlsx')]
     file=asksaveasfile(mode='wb',filetypes = files,defaultextension=files)
     with ExcelWriter(file,engine='openpyxl',mode='w') as output:
-        civil_final_df.to_excel(output,sheet_name="Civil",index=False)
-        eee_final_df.to_excel(output,sheet_name="EEE",index=False)
-        mech_final_df.to_excel(output,sheet_name="Mechanical",index=False)
-        ece_final_df.to_excel(output,sheet_name="ECE",index=False)
-        cse_final_df.to_excel(output,sheet_name="CSE",index=False)
+        try:
+            civil_final_df.to_excel(output,sheet_name="Civil",index=False)
+        except:
+            pass
+        try:
+            eee_final_df.to_excel(output,sheet_name="EEE",index=False)
+        except:
+            pass
+        try:
+            mech_final_df.to_excel(output,sheet_name="Mechanical",index=False)
+        except:
+            pass
+        try:
+            ece_final_df.to_excel(output,sheet_name="ECE",index=False)
+        except:
+            pass
+        try:
+            cse_final_df.to_excel(output,sheet_name="CSE",index=False)
+        except:
+            pass
     return 0
